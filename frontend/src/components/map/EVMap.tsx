@@ -137,6 +137,38 @@ export default function EVMap() {
         <MapFitter bounds={bounds} />
         <SimulationRunner />
 
+        {/* ── All Graph Nodes (subtle unselected style) ────────────────────── */}
+        {graphData?.nodes.map((node) => {
+          const isSource = node.id === sourceNode;
+          const isTarget = node.id === targetNode;
+          const isStation = stations.some((s) => s.id === node.id);
+          const isActiveRouteNode = activeRoute?.path?.includes(node.id);
+
+          // Skip rendering here if it's source, target, or charging station to avoid overlapping prominent markers
+          if (isSource || isTarget || isStation) return null;
+
+          return (
+            <CircleMarker
+              key={`node-${node.id}`}
+              center={[node.lat, node.lon]}
+              radius={2.5}
+              pathOptions={{
+                color: isActiveRouteNode ? '#818cf8' : '#334155',
+                fillColor: isActiveRouteNode ? '#818cf8' : '#1e293b',
+                fillOpacity: isActiveRouteNode ? 0.95 : 0.4,
+                weight: isActiveRouteNode ? 1.5 : 1,
+              }}
+            >
+              <Popup>
+                <div style={{ fontSize: 10 }}>
+                  <strong>Node {node.id}</strong><br />
+                  {node.name || `Road Junction ${node.id}`}
+                </div>
+              </Popup>
+            </CircleMarker>
+          );
+        })}
+
         {/* ── Routes ──────────────────────────────────────────────────────── */}
         {routes && Object.entries(routes).map(([alg, route]) => {
           if (!route?.path_coords?.length) return null;
