@@ -233,21 +233,29 @@ function SliderInput({
   const title = parts[0]?.trim() || '';
   const displayVal = parts[1]?.trim() || '';
 
+  const percentage = ((value - min) / (max - min)) * 100;
+
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       <div className="flex justify-between items-center">
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400" style={{ color }}>
           {title}
         </span>
-        <span className="text-xs font-mono font-bold text-slate-200 bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">
+        <span className="text-xs font-mono font-bold text-slate-200 bg-slate-950 px-2.5 py-1 rounded-md">
           {displayVal}
         </span>
       </div>
       <input
-        type="range" min={min} max={max} value={value}
+        type="range"
+        min={min}
+        max={max}
+        value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
-        style={{ accentColor: color }}
+        className="w-full h-1.5 rounded-lg appearance-none cursor-pointer outline-none premium-slider"
+        style={{
+          color: color,
+          background: `linear-gradient(to right, ${color} 0%, ${color} ${percentage}%, #1e293b ${percentage}%, #1e293b 100%)`,
+        }}
       />
     </div>
   );

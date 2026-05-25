@@ -196,7 +196,7 @@ export default function EVMap() {
   };
 
   // ── Tooltip trigger handlers ────────────────────────────────────────────────
-  const handleNodeMouseEnter = (node: any, e: React.MouseEvent) => {
+  const handleNodeHover = (node: any, e: React.MouseEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const tooltipX = e.clientX - rect.left;
@@ -208,19 +208,31 @@ export default function EVMap() {
       y: tooltipY,
       title: node.name || `Road Junction ${node.id}`,
       details: (
-        <div className="space-y-0.5 font-mono text-[10px]">
-          <div><span className="text-slate-400">Node ID:</span> {node.id}</div>
-          <div><span className="text-slate-400">Latitude:</span> {node.lat.toFixed(4)}</div>
-          <div><span className="text-slate-400">Longitude:</span> {node.lon.toFixed(4)}</div>
-          {node.slope !== 0 && (
-            <div><span className="text-slate-400">Slope:</span> {node.slope.toFixed(2)}%</div>
+        <div className="flex flex-col gap-1.5 font-mono text-[10px] mt-2 w-full">
+          <div className="flex justify-between items-center border-b border-slate-800/40 pb-1">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Node ID</span>
+            <span className="text-slate-100 font-bold">{node.id}</span>
+          </div>
+          <div className="flex justify-between items-center border-b border-slate-800/40 pb-1">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Latitude</span>
+            <span className="text-cyan-400 font-bold">{node.lat.toFixed(6)}</span>
+          </div>
+          <div className="flex justify-between items-center border-b border-slate-800/40 pb-1">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Longitude</span>
+            <span className="text-cyan-400 font-bold">{node.lon.toFixed(6)}</span>
+          </div>
+          {node.slope !== undefined && node.slope !== 0 && (
+            <div className="flex justify-between items-center">
+              <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Slope</span>
+              <span className="text-amber-400 font-bold">{node.slope.toFixed(2)}%</span>
+            </div>
           )}
         </div>
       ),
     });
   };
 
-  const handleStationMouseEnter = (station: any, e: React.MouseEvent) => {
+  const handleStationHover = (station: any, e: React.MouseEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const tooltipX = e.clientX - rect.left;
@@ -232,23 +244,33 @@ export default function EVMap() {
       y: tooltipY,
       title: station.name,
       details: (
-        <div className="space-y-1 text-[10px]">
-          <div>
-            <span className="text-cyan-400 font-bold">{station.charger_type}</span> ({station.power_kw} kW)
+        <div className="flex flex-col gap-1.5 text-[10px] mt-2 w-full">
+          <div className="flex justify-between items-center border-b border-slate-800/40 pb-1">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Type</span>
+            <span className="text-cyan-400 font-bold">{station.charger_type}</span>
           </div>
-          <div className="grid grid-cols-2 gap-x-2 font-mono">
-            <div><span className="text-slate-400">Wait:</span> {station.wait_time_min}m</div>
-            <div><span className="text-slate-400">Occupied:</span> {(station.occupancy_rate * 100).toFixed(0)}%</div>
-            <div className="col-span-2">
-              <span className="text-slate-400">Fuzzy Score:</span> {(station.desirability_score * 100).toFixed(0)}%
-            </div>
+          <div className="flex justify-between items-center border-b border-slate-800/40 pb-1">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Power</span>
+            <span className="text-slate-100 font-bold font-mono">{station.power_kw} kW</span>
+          </div>
+          <div className="flex justify-between items-center border-b border-slate-800/40 pb-1">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Wait Time</span>
+            <span className="text-amber-400 font-bold font-mono">{station.wait_time_min} mins</span>
+          </div>
+          <div className="flex justify-between items-center border-b border-slate-800/40 pb-1">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Occupancy</span>
+            <span className="text-slate-100 font-bold font-mono">{(station.occupancy_rate * 100).toFixed(0)}%</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-slate-400 font-medium uppercase tracking-wider text-[9px]">Desirability</span>
+            <span className="text-green-400 font-bold font-mono">{(station.desirability_score * 100).toFixed(0)}%</span>
           </div>
         </div>
       ),
     });
   };
 
-  const handleSourceTargetMouseEnter = (type: string, name: string, e: React.MouseEvent) => {
+  const handleSourceTargetHover = (type: string, name: string, e: React.MouseEvent) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const tooltipX = e.clientX - rect.left;
@@ -259,7 +281,11 @@ export default function EVMap() {
       x: tooltipX,
       y: tooltipY,
       title: `${type}: ${name}`,
-      details: <span className="text-[10px] text-slate-400">Plan route endpoints</span>,
+      details: (
+        <div className="flex flex-col gap-1 text-[10px] mt-1 font-mono">
+          <div className="text-slate-400 uppercase tracking-wider text-[9px]">Route Endpoint</div>
+        </div>
+      ),
     });
   };
 
@@ -402,18 +428,32 @@ export default function EVMap() {
               if (!coord) return null;
 
               return (
-                <circle
+                <g
                   key={`node-${node.id}`}
-                  cx={coord.x}
-                  cy={coord.y}
-                  r={isActiveRouteNode ? 4 : 2.5}
-                  fill={isActiveRouteNode ? '#818cf8' : '#0f172a'}
-                  stroke={isActiveRouteNode ? '#ffffff' : '#334155'}
-                  strokeWidth={isActiveRouteNode ? 1.5 : 1}
-                  className="transition-all duration-150 hover:stroke-cyan-400 hover:scale-125"
-                  onMouseEnter={(e) => handleNodeMouseEnter(node, e)}
+                  className="cursor-pointer"
+                  onMouseEnter={(e) => handleNodeHover(node, e)}
+                  onMouseMove={(e) => handleNodeHover(node, e)}
                   onMouseLeave={handleNodeMouseLeave}
-                />
+                >
+                  {/* Invisible hit target to prevent flickering */}
+                  <circle
+                    cx={coord.x}
+                    cy={coord.y}
+                    r={8}
+                    fill="transparent"
+                    stroke="transparent"
+                  />
+                  {/* Visible small circle */}
+                  <circle
+                    cx={coord.x}
+                    cy={coord.y}
+                    r={isActiveRouteNode ? 4 : 2.5}
+                    fill={isActiveRouteNode ? '#818cf8' : '#0f172a'}
+                    stroke={isActiveRouteNode ? '#ffffff' : '#334155'}
+                    strokeWidth={isActiveRouteNode ? 1.5 : 1}
+                    className="transition-all duration-150 pointer-events-none"
+                  />
+                </g>
               );
             })}
           </g>
@@ -435,7 +475,8 @@ export default function EVMap() {
                 return (
                   <g
                     key={station.id}
-                    onMouseEnter={(e) => handleStationMouseEnter(station, e)}
+                    onMouseEnter={(e) => handleStationHover(station, e)}
+                    onMouseMove={(e) => handleStationHover(station, e)}
                     onMouseLeave={handleNodeMouseLeave}
                   >
                     {/* Pulsing glow ring for active stop stations */}
@@ -483,7 +524,8 @@ export default function EVMap() {
             return (
               <g
                 className="pointer-events-auto"
-                onMouseEnter={(e) => handleSourceTargetMouseEnter('Source', sourceNodeData.name, e)}
+                onMouseEnter={(e) => handleSourceTargetHover('Source', sourceNodeData.name, e)}
+                onMouseMove={(e) => handleSourceTargetHover('Source', sourceNodeData.name, e)}
                 onMouseLeave={handleNodeMouseLeave}
               >
                 <circle cx={coord.x} cy={coord.y} r={9} fill="none" stroke="#34d399" strokeWidth={2} />
@@ -501,7 +543,8 @@ export default function EVMap() {
             return (
               <g
                 className="pointer-events-auto"
-                onMouseEnter={(e) => handleSourceTargetMouseEnter('Target', targetNodeData.name, e)}
+                onMouseEnter={(e) => handleSourceTargetHover('Target', targetNodeData.name, e)}
+                onMouseMove={(e) => handleSourceTargetHover('Target', targetNodeData.name, e)}
                 onMouseLeave={handleNodeMouseLeave}
               >
                 <circle cx={coord.x} cy={coord.y} r={9} fill="none" stroke="#f87171" strokeWidth={2} />
