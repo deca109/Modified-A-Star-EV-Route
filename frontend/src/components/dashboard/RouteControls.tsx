@@ -102,14 +102,14 @@ export default function RouteControls() {
   };
 
   return (
-    <div className="glass-card p-4 flex flex-col gap-3" style={{ flexShrink: 0 }}>
+    <div className="glass-card p-5 flex flex-col gap-4" style={{ flexShrink: 0 }}>
       <div className="flex items-center gap-2 mb-1">
-        <Navigation size={14} className="text-indigo-400" />
-        <h2 className="text-sm font-semibold text-slate-200">Route Planning</h2>
+        <Navigation size={15} className="text-indigo-400" />
+        <h2 className="text-sm font-bold tracking-wider text-slate-200 uppercase">Route Planning</h2>
       </div>
 
       {/* Source / Target */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-3">
         <NodeSelect
           label="Source"
           nodes={nodes}
@@ -127,7 +127,7 @@ export default function RouteControls() {
       </div>
 
       {/* Battery Config */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="flex flex-col gap-3">
         <SliderInput
           label={`SoC: ${Math.round(initialSoc * 100)}%`}
           min={10} max={100} value={Math.round(initialSoc * 100)}
@@ -144,17 +144,17 @@ export default function RouteControls() {
 
       {/* Algorithm selector */}
       <div>
-        <p className="section-header mb-2">Algorithm</p>
-        <div className="grid grid-cols-3 gap-1">
+        <p className="section-header mb-2 tracking-widest text-[10px]">Algorithm</p>
+        <div className="grid grid-cols-3 gap-1.5">
           {ALGORITHMS.map((alg) => (
             <button
               key={alg.id}
-              className="text-xs py-1.5 px-2 rounded-lg font-medium transition-all border"
+              className="text-xs py-2 px-1 rounded-lg font-semibold transition-all border"
               style={{
                 background: activeAlgorithm === alg.id
-                  ? `${alg.color}22`
-                  : 'rgba(15,23,42,0.6)',
-                borderColor: activeAlgorithm === alg.id ? alg.color : 'rgba(99,102,241,0.15)',
+                  ? `${alg.color}15`
+                  : 'rgba(15,23,42,0.4)',
+                borderColor: activeAlgorithm === alg.id ? alg.color : '#1e293b',
                 color: activeAlgorithm === alg.id ? alg.color : '#64748b',
               }}
               onClick={() => setActiveAlgorithm(alg.id)}
@@ -166,21 +166,21 @@ export default function RouteControls() {
       </div>
 
       {/* Actions */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-3 mt-1">
         <button
-          className="btn-secondary flex items-center justify-center gap-2 text-xs"
+          className="btn-secondary flex items-center justify-center gap-2 text-xs py-2.5"
           onClick={handlePlan}
           disabled={isLoading || !graphData}
         >
-          <GitBranch size={12} />
+          <GitBranch size={13} />
           Plan Routes
         </button>
         <button
-          className="btn-primary flex items-center justify-center gap-2 text-xs"
+          className="btn-primary flex items-center justify-center gap-2 text-xs py-2.5"
           onClick={handleSimulate}
           disabled={isLoading || !graphData}
         >
-          <PlayCircle size={12} />
+          <PlayCircle size={13} />
           Simulate
         </button>
       </div>
@@ -198,16 +198,16 @@ function NodeSelect({
   color: string;
 }) {
   return (
-    <div>
-      <label className="block text-xs mb-1" style={{ color }}>
+    <div className="flex flex-col gap-1">
+      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400" style={{ color }}>
         {label}
       </label>
       <select
-        className="w-full text-xs rounded-lg px-2 py-1.5 outline-none"
+        className="w-full text-xs rounded-lg px-2.5 py-2 outline-none border transition-colors hover:border-slate-700 focus:border-indigo-500"
         style={{
-          background: 'rgba(15,23,42,0.8)',
-          border: `1px solid rgba(99,102,241,0.2)`,
-          color: '#e2e8f0',
+          background: 'rgba(15, 23, 42, 0.9)',
+          borderColor: '#1e293b',
+          color: '#f1f5f9',
         }}
         value={value ?? ''}
         onChange={(e) => onChange(isNaN(Number(e.target.value)) ? e.target.value : Number(e.target.value))}
@@ -229,13 +229,24 @@ function SliderInput({
   label: string; min: number; max: number; value: number;
   onChange: (v: number) => void; color: string;
 }) {
+  const parts = label.split(':');
+  const title = parts[0]?.trim() || '';
+  const displayVal = parts[1]?.trim() || '';
+
   return (
-    <div>
-      <label className="block text-xs mb-1" style={{ color }}>{label}</label>
+    <div className="flex flex-col gap-1.5">
+      <div className="flex justify-between items-center">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400" style={{ color }}>
+          {title}
+        </span>
+        <span className="text-xs font-mono font-bold text-slate-200 bg-slate-950 px-2 py-0.5 rounded-md border border-slate-800">
+          {displayVal}
+        </span>
+      </div>
       <input
         type="range" min={min} max={max} value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-indigo-500"
+        className="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer"
         style={{ accentColor: color }}
       />
     </div>

@@ -186,7 +186,7 @@ export default function EVMap() {
                 Occupancy: {(station.occupancy_rate * 100).toFixed(0)}%<br />
                 Wait: {station.wait_time_min} min<br />
                 Cluster: {station.cluster_id}<br />
-                Desirability: {(station.cluster_desirability * 100).toFixed(0)}%
+                Desirability: {(station.desirability_score * 100).toFixed(0)}%
               </div>
             </Popup>
           </CircleMarker>
@@ -263,30 +263,44 @@ export default function EVMap() {
 
       {/* ── Overlay: Legend ──────────────────────────────────────────────────── */}
       <div
-        className="absolute bottom-4 left-4 glass-card-sm p-3 z-[1000]"
-        style={{ minWidth: 160 }}
+        className="absolute bottom-5 left-4 z-[1000] rounded-2xl border"
+        style={{
+          background: 'rgba(7, 11, 20, 0.88)',
+          backdropFilter: 'blur(12px)',
+          borderColor: 'rgba(30, 41, 59, 0.8)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+          minWidth: 170,
+          padding: '14px 16px',
+        }}
       >
-        <p className="text-xs font-bold text-slate-300 mb-2">Route Legend</p>
-        {Object.entries(ROUTE_COLORS).map(([alg, color]) => (
-          <div key={alg} className="flex items-center gap-2 text-xs mb-1">
-            <div className="w-4 h-1 rounded" style={{ background: color }} />
-            <span style={{ color: alg === activeAlgorithm ? color : '#64748b' }}>
-              {alg === 'shortest' ? 'Shortest Path'
-               : alg === 'energy' ? 'Energy-Aware'
-               : 'Modified A*'}
-            </span>
-            {alg === activeAlgorithm && (
-              <span className="badge badge-purple" style={{ fontSize: 9, padding: '1px 5px' }}>active</span>
-            )}
-          </div>
-        ))}
-        <div className="flex items-center gap-2 text-xs mt-2">
-          <div className="w-3 h-3 rounded-full" style={{ background: '#fbbf24' }} />
-          <span className="text-slate-400">Charging Station</span>
+        <p className="text-[10px] font-bold text-slate-300 mb-3 uppercase tracking-widest">Route Legend</p>
+        <div className="flex flex-col gap-2">
+          {Object.entries(ROUTE_COLORS).map(([alg, color]) => (
+            <div key={alg} className="flex items-center gap-2.5 text-xs">
+              <div className="w-5 h-1.5 rounded-full" style={{ background: color, boxShadow: `0 0 6px ${color}66` }} />
+              <span
+                className="font-medium"
+                style={{ color: alg === activeAlgorithm ? color : '#64748b' }}
+              >
+                {alg === 'shortest' ? 'Shortest Path'
+                 : alg === 'energy' ? 'Energy-Aware'
+                 : 'Modified A*'}
+              </span>
+              {alg === activeAlgorithm && (
+                <span className="badge badge-purple" style={{ fontSize: 9, padding: '1px 6px' }}>active</span>
+              )}
+            </div>
+          ))}
         </div>
-        <div className="flex items-center gap-2 text-xs mt-1">
-          <div className="w-3 h-3 rounded-full" style={{ background: '#818cf8', boxShadow: '0 0 6px #818cf8' }} />
-          <span className="text-slate-400">EV Vehicle</span>
+        <div className="mt-3 pt-3 border-t border-slate-800/60 flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-xs">
+            <div className="w-3 h-3 rounded-full" style={{ background: '#fbbf24', boxShadow: '0 0 4px #fbbf2466' }} />
+            <span className="text-slate-400">Charging Station</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs">
+            <div className="w-3 h-3 rounded-full" style={{ background: '#818cf8', boxShadow: '0 0 6px #818cf866' }} />
+            <span className="text-slate-400">EV Vehicle</span>
+          </div>
         </div>
       </div>
 
@@ -294,11 +308,15 @@ export default function EVMap() {
       {currentStep && (
         <div className="absolute top-4 right-4 z-[1000]">
           <motion.div
-            className="glass-card-sm px-3 py-2 text-xs font-semibold"
+            className="px-4 py-2.5 text-xs font-bold rounded-2xl border"
             key={currentStep.event}
-            initial={{ opacity: 0, y: -4 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             style={{
+              background: 'rgba(7, 11, 20, 0.9)',
+              backdropFilter: 'blur(12px)',
+              borderColor: 'rgba(30, 41, 59, 0.8)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
               color: currentStep.event === 'charging' ? '#34d399'
                    : currentStep.event === 'arrived' ? '#818cf8'
                    : '#38bdf8',

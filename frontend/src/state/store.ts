@@ -91,6 +91,10 @@ interface EVStore {
   setShowClusters: (v: boolean) => void;
   showStations: boolean;
   setShowStations: (v: boolean) => void;
+  leftSidebarOpen: boolean;
+  setLeftSidebarOpen: (v: boolean) => void;
+  rightSidebarOpen: boolean;
+  setRightSidebarOpen: (v: boolean) => void;
 }
 
 export const useEVStore = create<EVStore>((set, get) => ({
@@ -167,4 +171,8 @@ export const useEVStore = create<EVStore>((set, get) => ({
   setShowClusters: (v) => set({ showClusters: v }),
   showStations: true,
   setShowStations: (v) => set({ showStations: v }),
+  leftSidebarOpen: false,
+  setLeftSidebarOpen: (v) => set({ leftSidebarOpen: v }),
+  rightSidebarOpen: false,
+  setRightSidebarOpen: (v) => set({ rightSidebarOpen: v }),
 }));

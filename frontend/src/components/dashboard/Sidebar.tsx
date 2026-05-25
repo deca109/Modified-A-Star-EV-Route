@@ -23,12 +23,12 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="flex flex-col gap-3 overflow-y-auto p-3 border-r"
+      className="flex flex-col gap-4 overflow-y-auto p-4 border-r h-full scrollbar-none"
       style={{
-        width: '220px',
+        width: '240px',
         flexShrink: 0,
-        borderColor: 'var(--border)',
-        background: 'rgba(3, 7, 18, 0.6)',
+        borderColor: '#1e293b',
+        background: 'rgba(11, 18, 32, 0.85)',
       }}
     >
       {/* Live Battery Gauges */}

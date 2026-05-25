@@ -1,6 +1,7 @@
 'use client';
 
 import { useEVStore } from '@/state/store';
+import { TrendingUp } from 'lucide-react';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend, ReferenceLine,
@@ -53,18 +54,26 @@ export default function AnalyticsPanel() {
 
   if (steps.length === 0 && comparison.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center text-slate-500 text-sm">
-        Run a simulation to view analytics charts
+      <div className="h-full flex flex-col items-center justify-center gap-3 text-center px-4">
+        <div className="w-12 h-12 rounded-2xl bg-slate-900/60 border border-slate-800 flex items-center justify-center">
+          <TrendingUp size={22} className="text-slate-600" />
+        </div>
+        <div>
+          <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">No Simulation Telemetry</p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-1 max-w-xs">
+            Run a simulation to view interactive charts for state of charge, health, energy, speed, and algorithm feasibility.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="h-full flex gap-4 overflow-hidden">
+    <div className="h-full flex flex-col lg:flex-row gap-4 overflow-y-auto lg:overflow-hidden scrollbar-none pb-2">
       {/* SoC / SoH over time */}
       {steps.length > 0 && (
-        <div className="flex-1 min-w-0 flex flex-col">
-          <p className="section-header">SoC & SoH over Time</p>
+        <div className="flex-1 min-w-[240px] min-h-[180px] lg:min-h-0 flex flex-col">
+          <p className="section-header tracking-widest text-[10px] shrink-0 mb-2">SoC & SoH over Time</p>
           <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={socData} style={CHART_STYLE}>
@@ -84,8 +93,8 @@ export default function AnalyticsPanel() {
 
       {/* Energy consumption */}
       {steps.length > 0 && (
-        <div className="flex-1 min-w-0 flex flex-col">
-          <p className="section-header">Energy & Speed</p>
+        <div className="flex-1 min-w-[240px] min-h-[180px] lg:min-h-0 flex flex-col">
+          <p className="section-header tracking-widest text-[10px] shrink-0 mb-2">Energy & Speed</p>
           <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={energyData} style={CHART_STYLE}>
@@ -104,8 +113,8 @@ export default function AnalyticsPanel() {
 
       {/* Comparison bar chart */}
       {comparison.length > 0 && (
-        <div className="flex-1 min-w-0 flex flex-col">
-          <p className="section-header">Algorithm Comparison</p>
+        <div className="flex-1 min-w-[240px] min-h-[180px] lg:min-h-0 flex flex-col">
+          <p className="section-header tracking-widest text-[10px] shrink-0 mb-2">Algorithm Comparison</p>
           <div className="flex-1 min-h-0">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={compData} style={CHART_STYLE}>

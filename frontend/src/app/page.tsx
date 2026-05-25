@@ -19,10 +19,10 @@ import StatusBar from '@/components/dashboard/StatusBar';
 const EVMap = dynamic(() => import('@/components/map/EVMap'), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-full glass-card">
+    <div className="flex items-center justify-center h-full glass-card rounded-2xl">
       <div className="text-center">
         <div className="animate-spin-slow text-6xl mb-4">⚡</div>
-        <p className="text-slate-400">Loading map…</p>
+        <p className="text-slate-400 text-sm font-medium">Loading map…</p>
       </div>
     </div>
   ),
@@ -75,42 +75,50 @@ export default function Home() {
       <Header />
       <StatusBar />
 
-      <div className="flex flex-1 overflow-hidden gap-0">
-        {/* Left Sidebar */}
+      {/* ── Main layout: Left Sidebar | Content | Right Sidebar ── */}
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* ── Left Sidebar ─────────────────────────────────────── */}
         <Sidebar />
 
-        {/* Main Content Area */}
-        <div className="flex flex-1 flex-col overflow-hidden p-3 gap-3">
-          {/* Top: Map + Route Controls */}
-          <div className="flex flex-1 gap-3 overflow-hidden min-h-0">
+        {/* ── Main Content Area ────────────────────────────────── */}
+        <div className="flex flex-1 flex-col overflow-hidden p-4 gap-4 min-w-0">
+
+          {/* Top: Map + Right Panel */}
+          <div className="flex flex-1 gap-4 overflow-hidden min-h-0">
+
             {/* Map */}
             <motion.div
-              className="flex-1 relative overflow-hidden rounded-2xl"
+              className="flex-1 relative overflow-hidden rounded-2xl min-w-0"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.4 }}
             >
               <EVMap />
             </motion.div>
 
-            {/* Right panel stack */}
-            <div className="w-80 flex flex-col gap-3 overflow-hidden">
+            {/* Right Panel: Route Controls + Demo Launcher */}
+            <div
+              className="flex flex-col gap-3 overflow-y-auto scrollbar-none shrink-0"
+              style={{ width: '300px' }}
+            >
               <RouteControls />
               <DemoLauncher />
             </div>
           </div>
 
-          {/* Bottom panels (tabbed) */}
+          {/* Bottom Panel (tabbed) */}
           <motion.div
-            className="h-64 glass-card p-4 overflow-hidden"
+            className="glass-card p-4 overflow-hidden shrink-0"
+            style={{ height: '17rem' }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
           >
             {activePanel === 'battery'    && <BatteryPanel />}
             {activePanel === 'comparison' && <ComparisonPanel />}
             {activePanel === 'maintenance'&& <MaintenancePanel />}
-            {activePanel === 'analytics' && <AnalyticsPanel />}
+            {activePanel === 'analytics'  && <AnalyticsPanel />}
             {activePanel === 'map'        && <BatteryPanel />}
           </motion.div>
         </div>
