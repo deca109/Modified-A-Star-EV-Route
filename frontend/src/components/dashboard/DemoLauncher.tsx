@@ -51,13 +51,13 @@ export default function DemoLauncher() {
   };
 
   return (
-    <div className="glass-card p-4 flex flex-col gap-3 overflow-y-auto scrollbar-none" style={{ minHeight: 0 }}>
+    <div className="glass-card p-5 flex flex-col gap-4 overflow-y-auto scrollbar-none" style={{ minHeight: 0 }}>
       <div className="flex items-center gap-2 mb-1">
         <Rocket size={14} className="text-indigo-400" />
         <h2 className="text-sm font-bold tracking-wider text-slate-200 uppercase">Demo Scenarios</h2>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         {demoScenarios.length === 0 && (
           <p className="text-xs text-slate-500 text-center py-2">Backend offline – scenarios unavailable</p>
         )}
@@ -72,7 +72,7 @@ export default function DemoLauncher() {
           >
             {/* Header */}
             <button
-              className="w-full text-left flex items-center justify-between p-3 outline-none"
+              className="w-full text-left flex items-center justify-between p-3.5 outline-none"
               onClick={() => setExpandedId(expandedId === scenario.id ? null : scenario.id)}
             >
               <div className="flex items-center gap-2.5">
@@ -97,12 +97,12 @@ export default function DemoLauncher() {
                   transition={{ duration: 0.2, ease: 'easeInOut' }}
                   className="overflow-hidden"
                 >
-                  <div className="px-3 pb-3 pt-1 border-t border-slate-900/50 flex flex-col gap-2.5">
+                  <div className="px-4 pb-4 pt-2 border-t border-slate-900/50 flex flex-col gap-3">
                     <p className="text-[11px] text-slate-400 leading-relaxed font-normal">
                       {scenario.description}
                     </p>
                     <button
-                      className="btn-primary w-full py-1.5 px-3 flex items-center justify-center gap-1.5 text-xs font-semibold"
+                      className="btn-primary w-full py-2 px-3 flex items-center justify-center gap-1.5 text-xs font-semibold"
                       onClick={() => handleScenario(scenario.id)}
                       disabled={isLoading}
                     >

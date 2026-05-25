@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useEVStore } from '@/state/store';
 import { checkHealth, fetchGraph, fetchChargingStations, fetchClusters, fetchDemoScenarios } from '@/services/api';
@@ -40,6 +40,36 @@ export default function Home() {
     setLoadingMessage,
     setError,
   } = useEVStore();
+
+  const [bottomHeight, setBottomHeight] = useState(272); // 17rem = 272px
+  const isResizing = useRef(false);
+
+  const startResizing = (mouseDownEvent: React.MouseEvent) => {
+    isResizing.current = true;
+    const startY = mouseDownEvent.clientY;
+    const startHeight = bottomHeight;
+
+    const handleMouseMove = (mouseMoveEvent: MouseEvent) => {
+      if (!isResizing.current) return;
+      const deltaY = startY - mouseMoveEvent.clientY;
+      const newHeight = Math.max(160, Math.min(window.innerHeight * 0.7, startHeight + deltaY));
+      setBottomHeight(newHeight);
+      window.dispatchEvent(new Event('resize'));
+    };
+
+    const handleMouseUp = () => {
+      isResizing.current = false;
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.body.style.cursor = 'ns-resize';
+    document.body.style.userSelect = 'none';
+  };
 
   useEffect(() => {
     async function init() {
@@ -100,7 +130,7 @@ export default function Home() {
             {/* Right Panel: Route Controls + Demo Launcher */}
             <div
               className="flex flex-col gap-3 overflow-y-auto scrollbar-none shrink-0"
-              style={{ width: '300px' }}
+              style={{ width: '360px' }}
             >
               <RouteControls />
               <DemoLauncher />
@@ -109,17 +139,35 @@ export default function Home() {
 
           {/* Bottom Panel (tabbed) */}
           <motion.div
-            className="glass-card p-4 overflow-hidden shrink-0"
-            style={{ height: '17rem' }}
+            className="glass-card p-4 overflow-hidden shrink-0 relative pt-7"
+            style={{ height: bottomHeight }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 }}
           >
-            {activePanel === 'battery'    && <BatteryPanel />}
+            {/* Drag Handle */}
+            <div
+              className="absolute top-0 left-0 right-0 h-6 cursor-ns-resize z-50 flex items-center justify-center group"
+              onMouseDown={startResizing}
+            >
+              {/* Full-width top edge accent bar */}
+              <div className="absolute inset-x-0 top-0 h-[3px] bg-slate-600/60 group-hover:bg-cyan-400/70 group-hover:shadow-[0_0_10px_rgba(34,211,238,0.5)] transition-all duration-200" />
+              {/* Grip dots pill */}
+              <div className="relative flex items-center gap-[5px] px-3 py-[3px] rounded-full bg-slate-700/80 border border-slate-600/50 group-hover:border-cyan-400/60 group-hover:bg-slate-700 transition-all duration-200 shadow-md">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className="block w-[5px] h-[5px] rounded-full bg-slate-400 group-hover:bg-cyan-400 transition-colors duration-200"
+                  />
+                ))}
+              </div>
+            </div>
+
+            {activePanel === 'battery' && <BatteryPanel />}
             {activePanel === 'comparison' && <ComparisonPanel />}
-            {activePanel === 'maintenance'&& <MaintenancePanel />}
-            {activePanel === 'analytics'  && <AnalyticsPanel />}
-            {activePanel === 'map'        && <BatteryPanel />}
+            {activePanel === 'maintenance' && <MaintenancePanel />}
+            {activePanel === 'analytics' && <AnalyticsPanel />}
+            {activePanel === 'map' && <BatteryPanel />}
           </motion.div>
         </div>
       </div>

@@ -5,11 +5,11 @@ import { useEVStore } from '@/state/store';
 import { Zap, Activity, BarChart3, Wrench, Map } from 'lucide-react';
 
 const panels = [
-  { id: 'map',         icon: Map,      label: 'Live Map'     },
-  { id: 'battery',     icon: Zap,      label: 'Battery'      },
-  { id: 'comparison',  icon: BarChart3, label: 'Comparison'  },
-  { id: 'maintenance', icon: Wrench,   label: 'Maintenance'  },
-  { id: 'analytics',   icon: Activity,  label: 'Analytics'   },
+  { id: 'map', icon: Map, label: 'Live Map' },
+  { id: 'battery', icon: Zap, label: 'Battery' },
+  { id: 'comparison', icon: BarChart3, label: 'Comparison' },
+  { id: 'maintenance', icon: Wrench, label: 'Maintenance' },
+  { id: 'analytics', icon: Activity, label: 'Analytics' },
 ] as const;
 
 export default function Header() {
@@ -38,7 +38,7 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <div className="relative">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                 style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
+              style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
               <Zap size={15} className="text-white" />
             </div>
             {backendOnline && (
@@ -77,9 +77,8 @@ export default function Header() {
             <span className="text-[11px] truncate max-w-[100px]">{loadingMessage}</span>
           </motion.div>
         )}
-        <div className={`badge ${backendOnline ? 'badge-green' : 'badge-red'} py-1 px-2.5`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          <span className="hidden xs:inline">{backendOnline ? 'Online' : 'Offline'}</span>
+        <div className={`badge ${backendOnline ? 'badge-green' : 'badge-red'} py-2 px-2.5 flex items-center gap-2`}>
+          <span>Backend {backendOnline ? 'Online' : 'Offline'}</span>
         </div>
 
 
