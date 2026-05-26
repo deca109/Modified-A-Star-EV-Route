@@ -186,6 +186,7 @@ def energy_aware_route(
 # Algorithm 3: Modified A* (core algorithm)
 # ────────────────────────────────────────────────────────────────────────────────
 
+# Replace the _AStarNode dataclass with this leaner version
 @dataclass(order=True)
 class _AStarNode:
     f_cost: float
@@ -193,8 +194,7 @@ class _AStarNode:
     node: Any = field(compare=False)
     soc: float = field(compare=False)
     soh: float = field(compare=False)
-    parent: Optional[Any] = field(compare=False, default=None)
-    path: List = field(compare=False, default_factory=list)
+    parent_key: Optional[Tuple] = field(compare=False, default=None)
     charging_stops: List = field(compare=False, default_factory=list)
 
 
@@ -213,21 +213,7 @@ def modified_astar_route(
     w_traffic: float = 0.10,
     soc_min: float = 0.10,
 ) -> RouteResult:
-    """
-    Modified A* algorithm.
 
-    Edge cost:
-      c(u,v) = w_energy  × energy_cost
-             + w_dist    × distance_norm
-             + w_soh     × soh_penalty
-             + w_time    × time_norm
-             + w_traffic × (traffic_factor - 1)
-
-    soh_penalty = (1 - current_soh) × energy_cost  ← reward preserving SoH
-
-    Heuristic:
-      h(n) = geo_distance_to_goal / estimated_range × energy_factor
-    """
     import time
     t0 = time.perf_counter()
 
@@ -237,147 +223,278 @@ def modified_astar_route(
     target_lat = G.nodes[target].get("lat", 0)
     target_lon = G.nodes[target].get("lon", 0)
 
-    max_range_km = (capacity_kwh * initial_soh * (1 - soc_min)) / 0.18  # km at ~18kWh/100km
+    # -------------------------------------------------------------------------
+    # Lean heap node — parent pointer only, no path list copy
+    # -------------------------------------------------------------------------
 
-    def heuristic(node_id: Any, soh: float) -> float:
+    @dataclass(order=True)
+    class _AStarNode:
+        f_cost: float
+        g_cost: float = field(compare=False)
+        node: Any = field(compare=False)
+        soc: float = field(compare=False)
+        soh: float = field(compare=False)
+        parent_key: Optional[Tuple] = field(compare=False, default=None)
+        charging_stops: List = field(compare=False, default_factory=list)
+
+    # -------------------------------------------------------------------------
+    # Heuristic
+    # -------------------------------------------------------------------------
+
+    MIN_ENERGY_PER_KM = 0.12
+
+    def heuristic(node_id: Any) -> float:
         lat = G.nodes[node_id].get("lat", 0)
         lon = G.nodes[node_id].get("lon", 0)
         dist_km = haversine_distance(lat, lon, target_lat, target_lon) / 1000.0
-        energy_h = dist_km * 0.18 / soh if soh > 0 else float("inf")
+        optimistic_energy = dist_km * MIN_ENERGY_PER_KM
         return (
-            w_energy * energy_h +
-            w_dist   * (dist_km / max(max_range_km, 1))
+            w_energy * (optimistic_energy / 5.0) +
+            w_dist   * (dist_km / 100.0)
         )
 
-    def edge_cost(u: Any, v: Any, data: Dict, current_soh: float) -> float:
-        e_cost   = data.get("energy_cost", 0.1)
-        dist_n   = data.get("distance", 100.0) / 1000.0 / max(max_range_km, 1)
-        time_n   = data.get("travel_time", 1.0) / 60.0
-        traffic  = data.get("traffic_factor", 1.0) - 1.0
-        soh_pen  = (1.0 - current_soh) * e_cost
-        return (w_energy * e_cost + w_dist * dist_n + w_soh * soh_pen +
-                w_time * time_n + w_traffic * traffic)
+    # -------------------------------------------------------------------------
+    # Edge Cost Function
+    # -------------------------------------------------------------------------
 
-    # Open set (min-heap)
+    def edge_cost(
+        data: Dict,
+        current_soh: float,
+        energy_needed: float,
+    ) -> Tuple[float, float]:
+
+        distance_km    = data.get("distance", 1000.0) / 1000.0
+        travel_time    = data.get("travel_time", 1.0)
+        traffic_factor = data.get("traffic_factor", 1.0)
+
+        energy_n  = energy_needed / 5.0
+        distance_n = distance_km / 100.0
+        time_n    = travel_time / 120.0
+        traffic_n = max(0.0, traffic_factor - 1.0)
+
+        depth_of_discharge = energy_needed / max(capacity_kwh * current_soh, 1e-6)
+        stress_factor = (
+            1.0
+            + traffic_n
+            + (0.5 if depth_of_discharge > 0.25 else 0.0)
+        )
+        soh_loss    = 2e-5 * energy_needed * stress_factor * (1.0 + depth_of_discharge)
+        soh_penalty = soh_loss * 1000.0
+
+        cost = (
+            w_energy  * energy_n  +
+            w_dist    * distance_n +
+            w_time    * time_n    +
+            w_traffic * traffic_n +
+            w_soh     * soh_penalty
+        )
+        return cost, soh_loss
+
+    # -------------------------------------------------------------------------
+    # Open Set + came_from for path reconstruction
+    # -------------------------------------------------------------------------
+
     open_heap: List[_AStarNode] = []
-    start_node = _AStarNode(
-        f_cost=heuristic(source, initial_soh),
+
+    start_key = (source, round(initial_soc, 2), round(initial_soh, 3))
+
+    start = _AStarNode(
+        f_cost=heuristic(source),
         g_cost=0.0,
         node=source,
         soc=initial_soc,
         soh=initial_soh,
-        path=[source],
+        parent_key=None,
         charging_stops=[],
     )
-    heapq.heappush(open_heap, start_node)
 
-    visited: Dict[Any, Tuple[float, float, float]] = {}  # node → (g_cost, soc, soh)
+    heapq.heappush(open_heap, start)
+
+    # state_key -> node_obj, kept for path reconstruction
+    came_from: Dict[Tuple, _AStarNode] = {start_key: start}
+
+    # state_key -> best g_cost seen
+    visited: Dict[Tuple, float] = {}
 
     best_result: Optional[_AStarNode] = None
+    best_result_key: Optional[Tuple]  = None
+
+    MAX_HEAP_SIZE = 50_000
 
     while open_heap:
+
+        # Guard against runaway memory on very dense / unsolvable graphs
+        if len(open_heap) > MAX_HEAP_SIZE:
+            open_heap = heapq.nsmallest(MAX_HEAP_SIZE // 2, open_heap)
+            heapq.heapify(open_heap)
+
         current = heapq.heappop(open_heap)
 
+        state_key = (
+            current.node,
+            round(current.soc, 2),
+            round(current.soh, 3),
+        )
+
+        prev_best = visited.get(state_key)
+        if prev_best is not None and current.g_cost >= prev_best:
+            continue
+
+        visited[state_key] = current.g_cost
+
+        # ---------------------------------------------------------------------
+        # Goal Reached
+        # ---------------------------------------------------------------------
+
         if current.node == target:
-            best_result = current
+            best_result     = current
+            best_result_key = state_key
             break
 
-        # Visited check: allow revisit if significantly better SoC
-        prev = visited.get(current.node)
-        if prev is not None:
-            prev_g, prev_soc, prev_soh = prev
-            if current.g_cost >= prev_g and current.soc <= prev_soc:
-                continue
-        visited[current.node] = (current.g_cost, current.soc, current.soh)
+        # ---------------------------------------------------------------------
+        # Explore Neighbours
+        # ---------------------------------------------------------------------
 
         for neighbor, edge_data in G[current.node].items():
-            energy_needed = edge_data.get("energy_cost", 0.1)
 
-            new_soc = current.soc - energy_needed / (capacity_kwh * current.soh)
-            new_soh = current.soh - 1.5e-5 * max(0, current.soc - new_soc)
+            energy_needed = edge_data.get("energy_cost", 0.1)
+            effective_soc = current.soc
             new_charging_stops = list(current.charging_stops)
 
-            # Battery violation: check if we'd go below minimum
-            if new_soc < soc_min:
-                if new_soc < 0.0:
-                    # Cannot physically reach the neighbor
-                    continue
-                # Can we charge at this node?
-                if neighbor in station_nodes:
-                    station = station_map[neighbor]
-                    # Charge to 80%
-                    new_soc = 0.80
+            required_soc_drop = energy_needed / max(capacity_kwh * current.soh, 1e-6)
+
+            # -----------------------------------------------------------------
+            # Recharge BEFORE Traversal if needed
+            # -----------------------------------------------------------------
+
+            if effective_soc - required_soc_drop < soc_min:
+
+                if current.node in station_nodes:
+                    station = station_map[current.node]
+                    charging_penalty = station.get("wait_time_min", 10) / 60.0
+                    effective_soc    = 0.80
                     new_charging_stops.append({
-                        "node_id": neighbor,
-                        "station_id": station.get("id", neighbor),
-                        "station_name": station.get("name", str(neighbor)),
+                        "node_id":      current.node,
+                        "station_id":   station.get("id", current.node),
+                        "station_name": station.get("name", str(current.node)),
                         "charger_type": station.get("charger_type", "DC_Fast"),
                         "wait_time_min": station.get("wait_time_min", 10),
-                        "soc_before": round(current.soc - energy_needed / (capacity_kwh * current.soh), 4),
-                        "soc_after": 0.80,
+                        "soc_before":   round(current.soc, 4),
+                        "soc_after":    0.80,
                     })
                 else:
-                    # Allow small violations with high penalty
-                    new_soc = max(0.01, new_soc)
+                    continue
 
-            e_cost = edge_cost(current.node, neighbor, edge_data, current.soh)
-            g_new = current.g_cost + e_cost
-            h_new = heuristic(neighbor, new_soh)
+            # -----------------------------------------------------------------
+            # Traverse Edge
+            # -----------------------------------------------------------------
+
+            new_soc = effective_soc - required_soc_drop
+            if new_soc <= 0:
+                continue
+
+            edge_c, soh_loss = edge_cost(edge_data, current.soh, energy_needed)
+            new_soh = max(0.5, current.soh - soh_loss)
+
+            g_new = current.g_cost + edge_c
+
+            # Add charging time penalty if we topped up at this node
+            if effective_soc != current.soc:
+                g_new += w_time * charging_penalty
+
+            h_new = heuristic(neighbor)
             f_new = g_new + h_new
 
-            new_path = current.path + [neighbor]
-            heapq.heappush(open_heap, _AStarNode(
+            new_state_key = (
+                neighbor,
+                round(new_soc, 2),
+                round(new_soh, 3),
+            )
+
+            new_node = _AStarNode(
                 f_cost=f_new,
                 g_cost=g_new,
                 node=neighbor,
                 soc=new_soc,
                 soh=new_soh,
-                parent=current.node,
-                path=new_path,
+                parent_key=state_key,          # pointer only — no path list copy
                 charging_stops=new_charging_stops,
-            ))
+            )
+
+            heapq.heappush(open_heap, new_node)
+
+            # Keep came_from updated with the cheapest route to this state
+            prev = came_from.get(new_state_key)
+            if prev is None or g_new < prev.g_cost:
+                came_from[new_state_key] = new_node
+
+    # -------------------------------------------------------------------------
+    # Path Reconstruction helper (defined here to close over came_from)
+    # -------------------------------------------------------------------------
+
+    def reconstruct_path(goal_node: _AStarNode) -> List[Any]:
+        """Walk parent pointers back to source and return ordered node-ID list."""
+        path: List[Any] = []
+        current = goal_node
+        while current is not None:
+            path.append(current.node)
+            parent_key = current.parent_key
+            current = came_from.get(parent_key) if parent_key is not None else None
+        path.reverse()
+        return path
+
+    # -------------------------------------------------------------------------
+    # Fallback to plain A* if Modified A* found no path
+    # -------------------------------------------------------------------------
 
     is_fallback = False
+
     if best_result is None:
         is_fallback = True
-        # Fallback: try NetworkX A* without battery constraints
         try:
             path = nx.astar_path(G, source, target, weight="energy_cost")
             metrics = _compute_path_metrics(G, path, initial_soc, initial_soh, capacity_kwh)
             best_result = _AStarNode(
-                f_cost=0, g_cost=0, node=target, soc=metrics["soc_final"], soh=metrics["soh_final"],
-                path=path, charging_stops=[]
+                f_cost=0,
+                g_cost=0,
+                node=target,
+                soc=metrics["soc_final"],
+                soh=metrics["soh_final"],
+                parent_key=None,
+                charging_stops=[],
             )
         except nx.NetworkXNoPath:
             return _infeasible_route("ModifiedAStar", initial_soc, initial_soh)
 
-    path = best_result.path
-    metrics = _compute_path_metrics(G, path, initial_soc, initial_soh, capacity_kwh)
-    runtime = (time.perf_counter() - t0) * 1000
+    # -------------------------------------------------------------------------
+    # Build final path and metrics
+    # -------------------------------------------------------------------------
 
-    is_feasible = (not is_fallback) and (best_result.soc >= 0.05)
+    final_path = path if is_fallback else reconstruct_path(best_result)
+
+    metrics = _compute_path_metrics(G, final_path, initial_soc, initial_soh, capacity_kwh)
+    runtime = (time.perf_counter() - t0) * 1000
+    is_feasible = not is_fallback and best_result.soc >= soc_min
 
     return RouteResult(
         algorithm="ModifiedAStar",
-        path=path,
-        path_coords=_path_coords(G, path),
+        path=final_path,
+        path_coords=_path_coords(G, final_path),
         total_distance_km=metrics["distance_km"],
         total_energy_kwh=metrics["energy_kwh"],
         total_time_min=metrics["time_min"],
         charging_stops=best_result.charging_stops,
         feasible=is_feasible,
-        soc_final=best_result.soc,
-        soh_final=best_result.soh,
+        soc_final=round(best_result.soc, 4),
+        soh_final=round(best_result.soh, 4),
         soc_initial=initial_soc,
         soh_initial=initial_soh,
         battery_violations=metrics["violations"],
         runtime_ms=round(runtime, 2),
-        cost=best_result.g_cost,
+        cost=round(best_result.g_cost, 5),
         feasibility_score=_feasibility_score(metrics) if is_feasible else 0.0,
         path_details=metrics["path_details"],
     )
-
-
 # ────────────────────────────────────────────────────────────────────────────────
 # Helpers
 # ────────────────────────────────────────────────────────────────────────────────
