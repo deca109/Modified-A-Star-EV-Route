@@ -77,6 +77,20 @@ DEMO_SCENARIOS: List[Dict[str, Any]] = [
             "label": "Maintenance Alert",
         },
     },
+    {
+        "id": "impossible_route",
+        "name": "Impossible Range / Out of Charge",
+        "description": "Starting SoC is extremely low (0.1%). The destination is unreachable even with intermediate charging. Shortest path still displays on the map but shows as Infeasible.",
+        "icon": "🚨",
+        "config": {
+            "initial_soc": 0.001,
+            "initial_soh": 0.85,
+            "source_index": 0,
+            "target_index": 75,
+            "traffic_scenario": "normal",
+            "label": "Impossible Route",
+        },
+    },
 ]
 
 

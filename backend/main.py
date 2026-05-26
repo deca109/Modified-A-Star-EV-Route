@@ -435,9 +435,14 @@ async def reload_graph(req: ReloadRequest):
 
 def _route_to_dict(r) -> Dict[str, Any]:
     from dataclasses import asdict
+    import math
     d = asdict(r)
     # Convert tuple coords to lists for JSON
     d["path_coords"] = [list(c) for c in r.path_coords]
+    # Replace non-compliant JSON floats (like infinity or NaN) with a safe numeric value
+    for k, v in d.items():
+        if isinstance(v, float) and (math.isinf(v) or math.isnan(v)):
+            d[k] = 999999.0
     return d
 
 

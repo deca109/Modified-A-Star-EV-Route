@@ -44,18 +44,6 @@ export default function ComparisonPanel() {
       {/* Legend row */}
       <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 shrink-0">
         <p className="section-header mb-0 tracking-widest text-[10px]">Algorithm Comparison</p>
-        <div className="flex flex-wrap gap-3">
-          {comparison.map((row) => {
-            const meta = ALG_META[row.algorithm] ?? { label: row.algorithm, color: '#818cf8', desc: '' };
-            return (
-              <div key={row.algorithm} className="flex items-center gap-1.5 text-xs">
-                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: meta.color }} />
-                <span className="font-semibold" style={{ color: meta.color }}>{meta.label}</span>
-                <span className="text-slate-500 text-[10px] hidden sm:inline">({meta.desc})</span>
-              </div>
-            );
-          })}
-        </div>
       </div>
 
       {/* Scrollable table wrapper */}

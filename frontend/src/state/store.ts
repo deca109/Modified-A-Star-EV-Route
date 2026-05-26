@@ -153,7 +153,50 @@ export const useEVStore = create<EVStore>((set, get) => ({
   setComparison: (c) => set({ comparison: c }),
 
   // ── Demo scenarios ────────────────────────────────────────────────────────────
-  demoScenarios: [],
+  demoScenarios: [
+    {
+      id: 'short_fail',
+      name: 'Short Route Without Battery-Aware Planning',
+      description: 'A short route that fails with naive routing but succeeds with Modified A*',
+      icon: '⚡',
+      config: {},
+    },
+    {
+      id: 'congested_station',
+      name: 'Congested Charging Station Reroute',
+      description: 'Primary charging station is full; Modified A* reroutes to the next best cluster',
+      icon: '🚧',
+      config: {},
+    },
+    {
+      id: 'low_soh',
+      name: 'Degraded Battery Scenario',
+      description: 'Battery is at 70% SoH. Modified A* routes conservatively to preserve health.',
+      icon: '🔋',
+      config: {},
+    },
+    {
+      id: 'heavy_traffic',
+      name: 'Heavy Traffic Rerouting',
+      description: 'High traffic multipliers force energy-inefficient routes; Modified A* adapts.',
+      icon: '🚗',
+      config: {},
+    },
+    {
+      id: 'maintenance_warning',
+      name: 'Maintenance Warning Scenario',
+      description: 'Old battery with many deep discharge cycles triggers critical maintenance alerts.',
+      icon: '🔧',
+      config: {},
+    },
+    {
+      id: 'impossible_route',
+      name: 'Impossible Range / Out of Charge',
+      description: 'Starting SoC is extremely low (0.1%). The destination is unreachable even with intermediate charging. Shortest path still displays on the map but shows as Infeasible.',
+      icon: '🚨',
+      config: {},
+    },
+  ],
   activeScenario: null,
   setDemoScenarios: (s) => set({ demoScenarios: s }),
   setActiveScenario: (s) => set({ activeScenario: s }),

@@ -7,10 +7,10 @@ export default function StatusBar() {
   const { graphData, stations, clusters, simulation, routes } = useEVStore();
 
   const stats = [
-    { label: 'Nodes',    value: graphData?.node_count ?? '–', icon: <Network size={12} className="text-indigo-400" /> },
-    { label: 'Edges',    value: graphData?.edge_count ?? '–', icon: <Database size={12} className="text-cyan-400" /> },
-    { label: 'Stations', value: stations.length || '–', icon: <MapPin size={12} className="text-amber-400" />       },
-    { label: 'Clusters', value: clusters.length || '–', icon: <Layers size={12} className="text-purple-400" />       },
+    { label: 'Nodes', value: graphData?.node_count ?? '–', icon: <Network size={12} className="text-indigo-400" /> },
+    { label: 'Edges', value: graphData?.edge_count ?? '–', icon: <Database size={12} className="text-cyan-400" /> },
+    { label: 'Stations', value: stations.length || '–', icon: <MapPin size={12} className="text-amber-400" /> },
+    { label: 'Clusters', value: clusters.length || '–', icon: <Layers size={12} className="text-purple-400" /> },
     { label: 'Route Steps', value: simulation?.steps.length ?? '–', icon: <Footprints size={12} className="text-green-400" /> },
     { label: 'Algorithm', value: routes ? 'Modified A*' : '–', icon: <Settings size={12} className="text-pink-400" /> },
   ];

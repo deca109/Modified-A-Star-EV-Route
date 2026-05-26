@@ -299,6 +299,9 @@ def modified_astar_route(
 
             # Battery violation: check if we'd go below minimum
             if new_soc < soc_min:
+                if new_soc < 0.0:
+                    # Cannot physically reach the neighbor
+                    continue
                 # Can we charge at this node?
                 if neighbor in station_nodes:
                     station = station_map[neighbor]
@@ -314,9 +317,6 @@ def modified_astar_route(
                         "soc_after": 0.80,
                     })
                 else:
-                    # Skip infeasible edges unless close enough
-                    if new_soc < 0.0:
-                        continue
                     # Allow small violations with high penalty
                     new_soc = max(0.01, new_soc)
 
@@ -337,12 +337,15 @@ def modified_astar_route(
                 charging_stops=new_charging_stops,
             ))
 
+    is_fallback = False
     if best_result is None:
+        is_fallback = True
         # Fallback: try NetworkX A* without battery constraints
         try:
             path = nx.astar_path(G, source, target, weight="energy_cost")
+            metrics = _compute_path_metrics(G, path, initial_soc, initial_soh, capacity_kwh)
             best_result = _AStarNode(
-                f_cost=0, g_cost=0, node=target, soc=initial_soc, soh=initial_soh,
+                f_cost=0, g_cost=0, node=target, soc=metrics["soc_final"], soh=metrics["soh_final"],
                 path=path, charging_stops=[]
             )
         except nx.NetworkXNoPath:
@@ -352,6 +355,8 @@ def modified_astar_route(
     metrics = _compute_path_metrics(G, path, initial_soc, initial_soh, capacity_kwh)
     runtime = (time.perf_counter() - t0) * 1000
 
+    is_feasible = (not is_fallback) and (best_result.soc >= 0.05)
+
     return RouteResult(
         algorithm="ModifiedAStar",
         path=path,
@@ -360,7 +365,7 @@ def modified_astar_route(
         total_energy_kwh=metrics["energy_kwh"],
         total_time_min=metrics["time_min"],
         charging_stops=best_result.charging_stops,
-        feasible=metrics["feasible"] or len(path) > 1,
+        feasible=is_feasible,
         soc_final=best_result.soc,
         soh_final=best_result.soh,
         soc_initial=initial_soc,
@@ -368,7 +373,7 @@ def modified_astar_route(
         battery_violations=metrics["violations"],
         runtime_ms=round(runtime, 2),
         cost=best_result.g_cost,
-        feasibility_score=_feasibility_score(metrics),
+        feasibility_score=_feasibility_score(metrics) if is_feasible else 0.0,
         path_details=metrics["path_details"],
     )
 
