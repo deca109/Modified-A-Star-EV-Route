@@ -11,7 +11,6 @@ import BatteryPanel from '@/components/dashboard/BatteryPanel';
 import ComparisonPanel from '@/components/dashboard/ComparisonPanel';
 import MaintenancePanel from '@/components/dashboard/MaintenancePanel';
 import AnalyticsPanel from '@/components/dashboard/AnalyticsPanel';
-import DemoLauncher from '@/components/dashboard/DemoLauncher';
 import RouteControls from '@/components/dashboard/RouteControls';
 import StatusBar from '@/components/dashboard/StatusBar';
 
@@ -147,13 +146,12 @@ export default function Home() {
               <EVMap />
             </motion.div>
 
-            {/* Right Panel: Route Controls + Demo Launcher */}
+            {/* Right Panel: Route Controls */}
             <div
               className="flex flex-col gap-3 overflow-y-auto scrollbar-none shrink-0"
               style={{ width: '390px' }}
             >
               <RouteControls />
-              <DemoLauncher />
             </div>
           </div>
 

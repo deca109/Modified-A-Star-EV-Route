@@ -121,7 +121,14 @@ export default function AnalyticsPanel() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.1)" />
                 <XAxis dataKey="name" tick={{ fill: '#64748b', fontSize: 9 }} />
                 <YAxis tick={{ fill: '#64748b', fontSize: 9 }} />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip 
+                  content={<CustomTooltip />} 
+                  cursor={{ 
+                    fill: 'rgba(6, 182, 212, 0.05)', 
+                    stroke: 'rgba(6, 182, 212, 0.2)', 
+                    strokeWidth: 1
+                  }} 
+                />
                 <Legend wrapperStyle={{ fontSize: 10, color: '#94a3b8' }} />
                 <Bar dataKey="Energy kWh" fill="#818cf8" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="Distance km" fill="#38bdf8" radius={[4, 4, 0, 0]} />
