@@ -33,16 +33,16 @@ interface EVStore {
   // ── Route selection ──────────────────────────────────────────────────────────
   sourceNode: number | string | null;
   targetNode: number | string | null;
-  setSourceNode: (n: number | string | null) => void;
-  setTargetNode: (n: number | string | null) => void;
+  setSourceNode: (n: number | string | null, resetRoute?: boolean) => void;
+  setTargetNode: (n: number | string | null, resetRoute?: boolean) => void;
 
   // ── Battery config ───────────────────────────────────────────────────────────
   initialSoc: number;
   initialSoh: number;
   capacityKwh: number;
-  setInitialSoc: (v: number) => void;
-  setInitialSoh: (v: number) => void;
-  setCapacityKwh: (v: number) => void;
+  setInitialSoc: (v: number, resetRoute?: boolean) => void;
+  setInitialSoh: (v: number, resetRoute?: boolean) => void;
+  setCapacityKwh: (v: number, resetRoute?: boolean) => void;
 
   // ── Route results ─────────────────────────────────────────────────────────────
   routes: { shortest?: RouteResult; energy?: RouteResult; modified?: RouteResult } | null;
@@ -113,16 +113,96 @@ export const useEVStore = create<EVStore>((set, get) => ({
   // ── Route selection ──────────────────────────────────────────────────────────
   sourceNode: null,
   targetNode: null,
-  setSourceNode: (n) => set({ sourceNode: n }),
-  setTargetNode: (n) => set({ targetNode: n }),
+  setSourceNode: (n, resetRoute = true) => {
+    if (get().sourceNode !== n) {
+      set({
+        sourceNode: n,
+        ...(resetRoute && {
+          routes: null,
+          simulation: null,
+          simulationStep: 0,
+          isSimulating: false,
+          batteryStatus: null,
+          maintenance: null,
+          comparison: [],
+          activeScenario: null,
+        }),
+      });
+    }
+  },
+  setTargetNode: (n, resetRoute = true) => {
+    if (get().targetNode !== n) {
+      set({
+        targetNode: n,
+        ...(resetRoute && {
+          routes: null,
+          simulation: null,
+          simulationStep: 0,
+          isSimulating: false,
+          batteryStatus: null,
+          maintenance: null,
+          comparison: [],
+          activeScenario: null,
+        }),
+      });
+    }
+  },
 
   // ── Battery config ───────────────────────────────────────────────────────────
   initialSoc: 0.85,
   initialSoh: 0.95,
   capacityKwh: 75.0,
-  setInitialSoc: (v) => set({ initialSoc: v }),
-  setInitialSoh: (v) => set({ initialSoh: v }),
-  setCapacityKwh: (v) => set({ capacityKwh: v }),
+  setInitialSoc: (v, resetRoute = true) => {
+    if (get().initialSoc !== v) {
+      set({
+        initialSoc: v,
+        ...(resetRoute && {
+          routes: null,
+          simulation: null,
+          simulationStep: 0,
+          isSimulating: false,
+          batteryStatus: null,
+          maintenance: null,
+          comparison: [],
+          activeScenario: null,
+        }),
+      });
+    }
+  },
+  setInitialSoh: (v, resetRoute = true) => {
+    if (get().initialSoh !== v) {
+      set({
+        initialSoh: v,
+        ...(resetRoute && {
+          routes: null,
+          simulation: null,
+          simulationStep: 0,
+          isSimulating: false,
+          batteryStatus: null,
+          maintenance: null,
+          comparison: [],
+          activeScenario: null,
+        }),
+      });
+    }
+  },
+  setCapacityKwh: (v, resetRoute = true) => {
+    if (get().capacityKwh !== v) {
+      set({
+        capacityKwh: v,
+        ...(resetRoute && {
+          routes: null,
+          simulation: null,
+          simulationStep: 0,
+          isSimulating: false,
+          batteryStatus: null,
+          maintenance: null,
+          comparison: [],
+          activeScenario: null,
+        }),
+      });
+    }
+  },
 
   // ── Route results ─────────────────────────────────────────────────────────────
   routes: null,

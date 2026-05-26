@@ -15,6 +15,10 @@ export default function DemoLauncher() {
     setComparison,
     setRoutes,
     setActiveScenario,
+    setSourceNode,
+    setTargetNode,
+    setInitialSoc,
+    setInitialSoh,
     isLoading,
     setIsLoading,
     setLoadingMessage,
@@ -41,6 +45,16 @@ export default function DemoLauncher() {
         energy: res.route_coords.energy,
         modified: res.route_coords.modified,
       } as never);
+
+      const modifiedRoute = res.route_coords.modified || res.route_coords.shortest || res.route_coords.energy;
+      if (modifiedRoute && modifiedRoute.path && modifiedRoute.path.length > 0) {
+        const src = modifiedRoute.path[0];
+        const tgt = modifiedRoute.path[modifiedRoute.path.length - 1];
+        setSourceNode(src, false);
+        setTargetNode(tgt, false);
+        setInitialSoc(modifiedRoute.soc_initial, false);
+        setInitialSoh(modifiedRoute.soh_initial, false);
+      }
     } catch (e: unknown) {
       setError((e as Error).message ?? 'Scenario failed');
     } finally {

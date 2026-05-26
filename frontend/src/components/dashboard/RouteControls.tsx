@@ -48,8 +48,8 @@ export default function RouteControls() {
         algorithm: 'all',
       });
       setRoutes(res.routes as { shortest?: import('@/types').RouteResult; energy?: import('@/types').RouteResult; modified?: import('@/types').RouteResult });
-      setSourceNode(res.source as number);
-      setTargetNode(res.target as number);
+      setSourceNode(res.source as number, false);
+      setTargetNode(res.target as number, false);
       // Build comparison
       const rows = Object.values(res.routes).map((r) => ({
         algorithm: r!.algorithm,
