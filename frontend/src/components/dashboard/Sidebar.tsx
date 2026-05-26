@@ -23,9 +23,9 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="flex flex-col gap-4 overflow-y-auto p-4 border-r h-full scrollbar-none"
+      className="flex flex-col gap-5 overflow-y-auto p-5 border-r h-full scrollbar-none"
       style={{
-        width: '240px',
+        width: '270px',
         flexShrink: 0,
         borderColor: '#1e293b',
         background: 'rgba(11, 18, 32, 0.85)',

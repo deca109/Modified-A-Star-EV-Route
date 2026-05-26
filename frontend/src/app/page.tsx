@@ -130,7 +130,7 @@ export default function Home() {
             {/* Right Panel: Route Controls + Demo Launcher */}
             <div
               className="flex flex-col gap-3 overflow-y-auto scrollbar-none shrink-0"
-              style={{ width: '360px' }}
+              style={{ width: '390px' }}
             >
               <RouteControls />
               <DemoLauncher />
