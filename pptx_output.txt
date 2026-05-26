@@ -1,0 +1,446 @@
+--- Slide 1 ---
+FINAL YEAR RESEARCH PROJECT 
+R
+eview
+-1 
+Presentation
+Energy and Battery Health-Aware EV Routing with Predictive Maintenance using Modified A*Algorithm
+Supervised By
+:
+ 
+Prof
+.
+ S
+ankarsan
+ 
+Sahoo
+Group No.:
+ 
+15  (Section - 2241013)
+Name of the Student(s) with Regd. No.:
+Amrito Ballav Roy   -	2241018182
+Debopriyo
+ Roy       -	224
+1018183
+M.A 
+Akankshya
+:       -	2241001051
+Ankur Mazumder    -	2241004076
+Pankaj Kumar Sahu  -       2241019205
+Department of Computer Sc. and Engineering
+Faculty of Engineering & Technology (ITER)
+Siksha ‘O’ 
+Anusandhan
+ (Deemed to be) University
+ 
+Bhubaneswar, Odisha
+1
+
+--- Slide 2 ---
+Presentation Outline
+Problem Statement & Motivations
+Problem Statement
+Motivations
+Literature Review
+Existing Solutions & Limitations 
+Proposed Methodology & Approach 
+Key Components/Modules & Algorithms Used
+Dataset & Tools/Technologies
+Work Done So Far (Implementation Progress)
+Preliminary Results (if any)
+Future Work Plan
+References
+2
+
+--- Slide 3 ---
+Problem Statement
+3
+Given a road network represented as a graph G(V,E), where:
+Nodes V represent intersections and charging stations 
+Edges E represent road segments with associated distance, time, and energy cost 
+And given:
+Initial 
+State of Charge (SoC)
+ 
+Battery 
+State of Health (
+SoH
+)
+ 
+The goal is to 
+find a feasible path from source to destination such that the EV never exhausts its battery 
+and
+ provide predictive maintenance information of the battery model.
+Drawbacks / Challenges in Existing Works:
+• Existing routing algorithms (A*, Dijkstra) ignore battery State-of-Health (
+SoH
+) and assume static conditions.
+• No real-time integration of battery degradation (
+SoH
+) into routing decisions.
+• ML-based methods (RL, GCN) are computationally expensive and require large training datasets.
+• Metaheuristic approaches (GA, ACO) suffer from high computation time and poor scalability.
+• Predictive maintenance is absent in all reviewed EV routing frameworks.
+• No unified framework combining energy-aware routing, charging optimization, and battery health preservation.
+
+--- Slide 4 ---
+Motivations
+4
+Traditional vehicle navigation systems primarily optimize routes based on 
+shortest distance or minimum travel time
+, without considering critical energy-related factors — creating real-world challenges for the rapidly growing EV user base.
+These systems:
+Do 
+not account for battery energy constraints
+ during route planning 
+Ignore 
+battery State-of-Charge (SoC) / State-of-Health (SoC)
+ variations across the journey 
+Fail to consider 
+battery degradation
+ caused by driving patterns, terrain, and charging behavior 
+As a result, users face:
+Range anxiety
+ due to uncertain battery sufficiency 
+Frequent and inefficient charging stops
+ 
+Reduced battery lifespan
+ over time
+Statistical Evidence:
+AAA Survey (2022, n=1,051 U.S. adults): 60% cite charging infrastructure concerns, 58% worry about running out of charge, 55% find EVs unsuitable for long-distance travel — all routing-related barriers affecting over half of potential EV buyers.
+
+--- Slide 5 ---
+5
+Fig. 3: EV Adoption Barriers – AAA Survey (2022)
+Motivations Contd...
+
+--- Slide 6 ---
+6
+Fig. 4: Real-World EV Routing Scenario
+Motivations contd...
+
+--- Slide 7 ---
+Literature Review
+7
+R. No.
+Author & Year
+Methods/Techniques Used
+Dataset Used
+ Research 
+Outcomes
+Findings
+[1]
+Prakash & Radha (2025)
+Spectral Clustering + Fuzzy Reinforcement Learning + Energy-Constrained A* (enhanced with elevation & traffic)
+https://www.kaggle.com/datasets/divyanshusingh18/ev-cars-india-2023
+ 
+https://openrouteservice.org/
+ 
+https://www.sintef.no/projectweb/top/vrptw/solomon-benchmark
+22.8% reduction in travel time, 19.6% energy savings, 90% fewer battery violations
+Unified ML + algorithm framework improves routing efficiency but increases system complexity
+[2]
+Maity & Sarkar (2025)
+Deep Reinforcement Learning + Graph Convolutional Networks (GCN) for EV routing
+Large-scale road network graphs, simulated EV demand data
+~15–25% improvement in routing efficiency, ~30% faster convergence vs baseline RL
+Handles uncertainty well but requires heavy computation and training data
+[3]
+Mohammadi et al. (2025)
+Multi-objective Genetic Algorithm with real-time SoC & 
+SoH
+ battery 
+modeling
+Simulated EV fleet datasets with battery degradation parameters
+(Private SSRN dataset)
+~18–27% improvement in battery lifespan, ~12–20% reduction in operational cost
+Strong integration of battery health, but computationally intensive for real-time routing
+Table 1:Summary of Existing Approaches and Research 
+Limitations
+
+--- Slide 8 ---
+Literature Review cont...
+8
+R. No.
+Author & Year
+Methods/Techniques Used
+Dataset Used
+ Research 
+Outcomes
+Findings
+[4]
+Bezzi et al. (2023)
+Branch-and-Price exact algorithm
+EVRP benchmark datasets
+Achieves optimal solutions (100% optimality) for instances up to 30 customers, ~35% faster than previous exact methods
+Very accurate but not scalable to large networks
+[5]
+Romet et al. (2021)
+Ant Colony Optimization (ACO) with battery 
+SoH
+Small EVRP benchmarks
+~10–15% improvement in battery-aware routing cost vs traditional ACO
+Early integration of battery health; limited scalability
+Table 2:Summary of Existing Approaches and Research 
+Limitations
+
+--- Slide 9 ---
+Research Gap & Improvements
+9
+Approach
+Limitations
+Standard A* / Dijkstra (Classical baseline)
+Ignores battery aging (SoH), assumes static conditions, no predictive maintenance
+Metaheuristics (GA, ACO) [5]
+High computation time, may get stuck in local optima, not scalable
+Exact Algorithms [4]
+Works only for small-scale problems (≤ 30 nodes), impractical for real-world networks
+Reinforcement Learning [2]
+Requires large training data, poor generalization to unseen maps
+Approach Based Limitations Discovered Through Literature
+
+--- Slide 10 ---
+Research Gap & Improvements
+10
+Consolidated Research Gaps
+Most methods ignore real-time dynamics such as traffic and terrain changes 
+Limited integration of battery degradation (
+SoH
+) into routing decisions 
+Lack of predictive maintenance mechanisms 
+No unified framework combining: 
+Energy-aware routing 
+Charging optimization 
+Battery health preservation 
+Proposed Improvements in Our Work
+Modified A* with energy-aware cost function 
+Dynamic tracking of State of Charge (SoC) during routing 
+Integration of battery degradation (
+SoH
+) model 
+Intelligent charging station selection and optimization 
+Predictive maintenance module for battery health monitoring 
+Scalable solution suitable for real-world road networks using OpenStreetMap 
+
+--- Slide 11 ---
+Proposed Solution & Architecture
+11
+Core Techniques:
+1. Spectral Clustering
+Groups charging stations using 
+geodesic distance
+ 
+Forms topologically relevant clusters 
+Reduces search space for routing
+2. Fuzzy Reinforcement Learning
+Applies 
+Fuzzy Q-Learning
+ to evaluate station clusters 
+Inputs: traffic, waiting time, distance, SoC 
+Outputs: desirability score for each cluster 
+Helps in intelligent charging station selection
+3. Modified A* Search
+Extended A* with energy and battery-aware cost 
+Cost function:  g(n) = distance + 
+α⋅energy + β⋅(1 / 
+SoH
+ )
+4. Battery Degradation Model
+Based on Li-ion battery behavior 
+Considers depth of discharge and usage cycles 
+Dynamically updates 
+State of Health (SoH)
+ 
+Penalizes routes causing higher degradation 
+
+--- Slide 12 ---
+Proposed Solution & Architecture
+ Contd...
+12
+Fig. 1: Workflow of the Proposed Model
+
+--- Slide 13 ---
+Proposed Solution & Architecture
+		 cont.
+13
+Fig. 2: Schematic Model Diagram of the Proposed Model
+Fig. 2: Schematic Model Diagram of the Proposed Model
+
+--- Slide 14 ---
+Dataset & Tools/Technologies
+14
+Dataset Used
+OpenStreetMap (OSM) Road Network
+ 
+Real-world road network data including: 
+Nodes (intersections) 
+Edges (road segments) 
+Used for graph construction and routing 
+Elevation Data, Routing and Telemetry Data
+Retrieved using Elevation APIs or SRTM data 
+Solomon VRP Dataset (extended for EVRP)
+Charging Station Data
+ 
+Extracted from OpenStreetMap (amenity = 
+charging_station
+) 
+Used as replenishment nodes in routing 
+Traffic and Speed Assumptions
+ 
+Average speed assigned to road types 
+Used for travel time and energy modeling 
+EV Dataset: 
+Source: Kaggle (
+https://www.kaggle.com/datasets/divyanshusingh18/ev-cars-india-2023)
+
+--- Slide 15 ---
+Dataset & Tools/Technologies
+15
+Tools
+ & Technologies 
+Used
+Python 3.x
+ 
+Core programming language for implementation
+ 
+OSMnx
+ 
+Extracts road network from OpenStreetMap 
+Converts map data into graph format 
+NetworkX
+ 
+Graph modeling and pathfinding 
+Implementation of Modified A* algorithm 
+NumPy
+ 
+Numerical computations for energy calculations 
+Pandas
+ 
+Data preprocessing and handling 
+Matplotlib
+ 
+Visualization of routes and graphs 
+Development Environment
+ 
+Google Collab / 
+Jupyter
+ Notebook / VS Code
+
+--- Slide 16 ---
+Progress in Implementation Plan & Methodology
+16
+Data Preparation
+ 
+Instead of directly using real-world map data, a 
+synthetic graph model
+ has been created using 
+NetworkX
+ 
+The synthetic graph simulates road nodes (intersections), edges (road segments) and custom connections
+Synthetic elevation (slope) values
+ are assigned to edges to mimic real-world terrain conditions 
+Edge attributes include distance, slope and energy cost (distance x 1+|slope|)
+Battery Module Implementation
+ 
+Developed a basic 
+battery discharge model
+ 
+Implemented: 
+State of Charge (SoC) tracking 
+Capacity reduction behavior 
+Calibrated using 
+sample charge/discharge curves
+ 
+Observed realistic SoC drop across routes 
+Spectral Clustering Prototype
+ 
+Applied 
+spectral clustering
+ on charging station coordinates 
+Grouped stations based on geographical proximity 
+Observed that clusters aligned with 
+expected real-world regions
+ 
+Reduced search space for routing 
+Modified 
+A
+* Implementation
+Energy cost instead of distance 
+Custom heuristic (energy + state-of-health based)
+Tested on small graphs and verified that
+Routes remain feasible (no battery exhaustion) 
+Charging-aware paths are selected
+
+--- Slide 17 ---
+Future Work Plan
+17
+Real-World Data Integration
+Replace synthetic graph with real-world data 
+OpenStreetMap (OSM) using 
+NetworkX
+/
+OSMnx
+ 
+Reuse existing energy and routing pipeline 
+Charging & Routing Optimization
+Integrate charging stations into graph 
+Charging node identification 
+Optimal stop selection 
+Implement clustering + RL-based station evaluation (as per design) 
+ Battery Health & Predictive Maintenance
+Implement 
+SoH
+ degradation model based on charge cycles and depth of discharge 
+Add predictive maintenance alerts and Remaining
+ Useful Life (RUL) estimation 
+Machine Learning Integration
+Train Fuzzy Reinforcement Learning module using synthetic traffic and demand data 
+Optimize charging and routing decisions 
+Testing & Evaluation
+Perform large-scale simulations 
+Compare with baseline methods (shortest path, energy-only) 
+Evaluate metrics such as Energy Consumption, Travel Time, Battery Violations and 
+SoH
+ degradation
+System Development & Deployment
+Develop visualization/interface for route display 
+Conduct end-to-end testing 
+Prepare documentation and research publication
+
+--- Slide 18 ---
+References
+[1] 
+A. P. Prakash and R. Radha, “Sustainable EV routing using spectral clustering and fuzzy reinforcement learning with energy-constrained A* under mobility and waiting constraints,” 
+Scientific Reports
+, vol. 15, 2025.
+[2] 
+A. Maity and S. Sarkar, “Electric vehicle routing with stochastic customers using deep reinforcement learning and graph convolutional networks,” 
+Journal of Intelligent Transportation Systems
+, 2025.
+[3] 
+H. Mohammadi, E. Immonen, M. Heydarzadeh, J. 
+Plosila
+, and H. 
+Haghbayan
+, “Aging-aware fleet management for electric vehicle routing problem,” 
+SSRN Preprint
+, 2025.
+[4] 
+D. Bezzi, A. Ceselli, and G. 
+Righini
+, “A route-based algorithm for the electric vehicle routing problem with multiple technologies,” 
+Transportation Research Part C
+, vol. 157, 2023.
+[5] 
+P. Romet, R. 
+Tabusse
+, et al., “Autonomous electric vehicle routing problem using ant colony optimization with consideration of the battery state-of-health,” 
+Proceedings of IEEE ICTAI
+, 2021.
+[6] 
+Additional sources  include works by Zhan et al. 2019, Qu et al. 2021, and 
+domain surveys.
+18
+
+--- Slide 19 ---
+19
