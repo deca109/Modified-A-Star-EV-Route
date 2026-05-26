@@ -4,7 +4,13 @@ import { useEVStore } from '@/state/store';
 import { Network, Database, MapPin, Layers, Footprints, Settings } from 'lucide-react';
 
 export default function StatusBar() {
-  const { graphData, stations, clusters, simulation, routes } = useEVStore();
+  const { graphData, stations, clusters, simulation, routes, activeAlgorithm } = useEVStore();
+
+  const algLabels: Record<string, string> = {
+    shortest: 'Shortest Path',
+    energy: 'Energy-Aware',
+    modified: 'Modified A*',
+  };
 
   const stats = [
     { label: 'Nodes', value: graphData?.node_count ?? '–', icon: <Network size={14} className="text-indigo-400" /> },
@@ -12,8 +18,9 @@ export default function StatusBar() {
     { label: 'Stations', value: stations.length || '–', icon: <MapPin size={14} className="text-amber-400" /> },
     { label: 'Clusters', value: clusters.length || '–', icon: <Layers size={14} className="text-purple-400" /> },
     { label: 'Route Steps', value: simulation?.steps.length ?? '–', icon: <Footprints size={14} className="text-green-400" /> },
-    { label: 'Algorithm', value: routes ? 'Modified A*' : '–', icon: <Settings size={14} className="text-pink-400" /> },
+    { label: 'Algorithm', value: routes ? (algLabels[activeAlgorithm] ?? 'Modified A*') : '–', icon: <Settings size={14} className="text-pink-400" /> },
   ];
+
 
   return (
     <div

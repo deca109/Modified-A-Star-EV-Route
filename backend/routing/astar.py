@@ -367,22 +367,30 @@ def modified_astar_route(
             # Recharge BEFORE Traversal if needed
             # -----------------------------------------------------------------
 
-            if effective_soc - required_soc_drop < soc_min:
+            # We are forced to charge if the next step would drop SoC below 5% (0.05)
+            is_forced = (effective_soc - required_soc_drop < 0.05)
+            
+            # We also proactively choose to charge if we are at a station and SoC is below 75% (0.75)
+            should_charge = is_forced or (current.node in station_nodes and effective_soc < 0.75)
 
+            if should_charge:
                 if current.node in station_nodes:
                     station = station_map[current.node]
                     charging_penalty = station.get("wait_time_min", 10) / 60.0
-                    effective_soc    = 0.80
-                    new_charging_stops.append({
-                        "node_id":      current.node,
-                        "station_id":   station.get("id", current.node),
-                        "station_name": station.get("name", str(current.node)),
-                        "charger_type": station.get("charger_type", "DC_Fast"),
-                        "wait_time_min": station.get("wait_time_min", 10),
-                        "soc_before":   round(current.soc, 4),
-                        "soc_after":    0.80,
-                    })
-                else:
+                    effective_soc    = 0.95
+                    # Only log stop if we actually charged (SoC increased)
+                    if effective_soc > current.soc:
+                        new_charging_stops.append({
+                            "node_id":      current.node,
+                            "station_id":   station.get("id", current.node),
+                            "station_name": station.get("name", str(current.node)),
+                            "charger_type": station.get("charger_type", "DC_Fast"),
+                            "wait_time_min": station.get("wait_time_min", 10),
+                            "soc_before":   round(current.soc, 4),
+                            "soc_after":    0.95,
+                        })
+                elif is_forced:
+                    # Forced to charge but no station at this node! This path is dead.
                     continue
 
             # -----------------------------------------------------------------
@@ -474,7 +482,7 @@ def modified_astar_route(
 
     metrics = _compute_path_metrics(G, final_path, initial_soc, initial_soh, capacity_kwh)
     runtime = (time.perf_counter() - t0) * 1000
-    is_feasible = not is_fallback and best_result.soc >= soc_min
+    is_feasible = not is_fallback and best_result.soc >= 0.05
 
     return RouteResult(
         algorithm="ModifiedAStar",
