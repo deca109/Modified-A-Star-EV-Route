@@ -101,15 +101,23 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden" style={{ background: 'var(--bg-primary)' }}>
-      <Header />
-      <StatusBar />
+    <div className="h-screen w-screen flex flex-col overflow-hidden relative" style={{ background: 'var(--bg-primary)' }}>
+      {/* Premium Glassmorphic Ambient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="ambient-orb orb-indigo" />
+        <div className="ambient-orb orb-cyan" />
+        <div className="ambient-orb orb-emerald" />
+      </div>
 
-      {/* ── Main layout: Left Sidebar | Content | Right Sidebar ── */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col h-full w-full relative z-10 overflow-hidden">
+        <Header />
+        <StatusBar />
 
-        {/* ── Left Sidebar ─────────────────────────────────────── */}
-        <Sidebar />
+        {/* ── Main layout: Left Sidebar | Content | Right Sidebar ── */}
+        <div className="flex flex-1 overflow-hidden">
+
+          {/* ── Left Sidebar ─────────────────────────────────────── */}
+          <Sidebar />
 
         {/* ── Main Content Area ────────────────────────────────── */}
         <div className="flex flex-1 flex-col overflow-hidden p-4 gap-4 min-w-0">
@@ -182,6 +190,7 @@ export default function Home() {
             {activePanel === 'map' && <BatteryPanel />}
           </motion.div>
         </div>
+      </div>
       </div>
     </div>
   );

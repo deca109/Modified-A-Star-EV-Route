@@ -23,11 +23,11 @@ export default function Header() {
 
   return (
     <header
-      className="flex items-center justify-between px-4 py-2 border-b"
+      className="flex items-center justify-between px-4 py-2 border-b transition-all duration-300"
       style={{
-        background: 'rgba(11, 18, 32, 0.95)',
-        borderColor: 'rgba(99, 102, 241, 0.15)',
-        backdropFilter: 'blur(16px)',
+        background: 'rgba(15, 23, 42, 0.45)',
+        borderColor: 'rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(20px) saturate(160%)',
         height: '56px',
         flexShrink: 0,
       }}
