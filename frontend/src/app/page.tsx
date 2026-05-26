@@ -126,13 +126,11 @@ export default function Home() {
 
             {/* Map */}
             <motion.div
-              className="flex-1 relative overflow-hidden rounded-2xl min-w-0 border border-slate-800/80 transition-all duration-300"
+              className="flex-1 relative overflow-hidden rounded-2xl min-w-0 border border-slate-800/80 hover:border-sky-500/50 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_30px_rgba(56,189,248,0.3)] transition-all duration-300"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ 
                 scale: 1.02,
-                borderColor: 'rgba(56, 189, 248, 0.5)',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(56, 189, 248, 0.3)',
                 zIndex: 10
               }}
               transition={{ 
