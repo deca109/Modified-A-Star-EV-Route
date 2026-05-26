@@ -146,7 +146,7 @@ export default function Home() {
 
             {/* Right Panel: Route Controls */}
             <div
-              className="flex flex-col gap-3 overflow-y-auto scrollbar-none shrink-0"
+              className="flex flex-col gap-3 overflow-y-auto scrollbar-none shrink-0 h-full"
               style={{ width: '390px' }}
             >
               <RouteControls />
