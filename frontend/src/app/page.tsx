@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useEVStore } from '@/state/store';
 import { checkHealth, fetchGraph, fetchChargingStations, fetchClusters, fetchDemoScenarios } from '@/services/api';
 import Header from '@/components/dashboard/Header';
@@ -38,6 +38,8 @@ export default function Home() {
     setIsLoading,
     setLoadingMessage,
     setError,
+    isMapEnlarged,
+    setIsMapEnlarged,
   } = useEVStore();
 
   const [bottomHeight, setBottomHeight] = useState(272); // 17rem = 272px
@@ -99,6 +101,19 @@ export default function Home() {
     init();
   }, []);
 
+  // Keyboard Escape key handler to exit fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMapEnlarged) {
+        setIsMapEnlarged(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMapEnlarged, setIsMapEnlarged]);
+
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden relative" style={{ background: 'var(--bg-primary)' }}>
       {/* Premium Glassmorphic Ambient Glow Orbs */}
@@ -125,11 +140,26 @@ export default function Home() {
           <div className="flex flex-1 gap-4 overflow-hidden min-h-0">
 
             {/* Map */}
+            <AnimatePresence>
+              {isMapEnlarged && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[998] bg-slate-950/90 pointer-events-auto"
+                  onClick={() => setIsMapEnlarged(false)}
+                />
+              )}
+            </AnimatePresence>
+
             <motion.div
-              className="flex-1 relative overflow-hidden rounded-2xl min-w-0 border border-slate-800/80 hover:border-sky-500/50 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_30px_rgba(56,189,248,0.3)] transition-all duration-300"
+              className={isMapEnlarged
+                ? "fixed inset-4 md:inset-6 z-[999] overflow-hidden rounded-2xl border border-sky-500/30 bg-[#070b14]/95 shadow-[0_0_50px_rgba(56,189,248,0.35)] pointer-events-auto"
+                : "flex-1 relative overflow-hidden rounded-2xl min-w-0 border border-slate-800/80 hover:border-sky-500/50 hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),0_0_30px_rgba(56,189,248,0.3)] transition-all duration-300"
+              }
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ 
+              whileHover={isMapEnlarged ? {} : { 
                 scale: 1.02,
                 zIndex: 10
               }}

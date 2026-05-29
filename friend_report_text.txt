@@ -1,0 +1,1292 @@
+DEEP LEARNING-BASED PLACEMENT SKILL GAP ANALYSIS SYSTEM
+A Project Report
+Submitted by:
+Sohum Chatterjee   (2241003019)
+Shivaji Chatterjee    (2241003017)
+                           Sarfaraz Alam         (2241001057)
+                           Md Faizan Ahmad  (2241001046)
+
+in partial fulfillment for the award of the degree of
+of
+BACHELOR OF TECHNOLOGY
+IN
+COMPUTER SCIENCE AND ENGINEERING
+
+DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
+Faculty of Engineering and Technology, Institute of Technical Education and Research
+SIKSHA ‘O’ ANUSANDHAN (DEEMED TO BE) UNIVERSITY
+Bhubaneswar, Odisha, India(June 2026)
+
+CERTIFICATE
+This is to certify that the project report titled "DEEP LEARNING-BASED PLACEMENT SKILL GAP ANALYSIS SYSTEM" is being submitted by the following students to the Institute of Technical Education and Research, Siksha ‘O’ Anusandhan (Deemed to be) University, Bhubaneswar, for the partial fulfilment of the requirements for the degree of Bachelor of Technology in Computer Science and Engineering.
+The names and registration numbers of the students are:
+[ListParagraph] Sohum Chatterjee                   2241003019
+[ListParagraph] Shivaji Chatterjee                   2241003017
+[ListParagraph] Sarfaraz Alam                         2241001057
+[ListParagraph] Md Faizan Ahmad                  2241001046
+This is a record of original work carried out by them under my guidance and
+ supervision. The project work, in my opinion, has reached the requisite 
+standard, fulfilling the requirements for the award of the degree. The results 
+contained in this report have not been submitted, in part or in full, to any other 
+university or institution for the award of any other degree or diploma.
+
+(Dr. Rajashree Dash)
+Department of Computer Science and Engineering
+Faculty of Engineering & Technology (ITER)
+Siksha ‘O’ Anusandhan (Deemed to be) University
+Date: ___________________________
+ACKNOWLEDGEMENT
+Above all, we would like to thank our project supervisor Dr. Rajashree Dash, Assistant Professor, Department of Computer Science and Engineering, ITER, Siksha ‘O’ Anusandhan (Deemed to be) University, for her constant guidance, support and technical help during the period of the project. I am immensely thankful for her suggestions that played a pivotal role in the evolution of this work.
+Our sincere thanks also go to the Head of the Department and the faculty members of the Department of Computer Science and Engineering for providing us with the requisite computational resources, lab infrastructure, and academic environment to conduct this research work. The availability of computing facilities and library resources helped us conduct our experiment and review the literature.
+Our work builds upon the existing literature in the areas of deep learning, natural language processing and educational data mining. We acknowledge the contributions of the research community through their published works.
+We thank our family and friends for their help, patience, and support along the way.  Because they believed in us, we were able to overcome all the challenges of the research.
+
+ Place: Bhubaneswar                                            
+
+ Date: 
+
+                                                                                   Signature of Students 
+DECLARATION
+We hereby declare that the project report titled "Deep Learning - Based Placement Skill Gap Analysis" has been prepared by us in partial fulfilment of the requirements for the award of the degree of Bachelor of Technology in Computer Science and Engineering from Siksha ‘O’ Anusandhan (Deemed to be) University, Bhubaneswar.
+We further declare that:
+[ListParagraph] This report is our own original work and has not been submitted anywhere else for the award of any other degree or diploma.
+[ListParagraph] All ideas, data, and information borrowed from other sources have been duly acknowledged and cited in the reference section.
+[ListParagraph] We have not fabricated, misrepresented, or falsified any idea, fact, data, or source in this submission.
+[ListParagraph] We understand that any violation of academic integrity will be subject to disciplinary action by the university.
+
+Signatures of Students:
+
+Sohum Chatterjee      (2241003019)          ____________________
+
+Shivaji Chatterjee      (2241003017)          ____________________
+
+Sarfaraz Alam            (2241001057)          ____________________
+
+Md Faizan Ahmad     (2241001046)           ____________________
+
+Date: ___________________________
+
+REPORT APPROVAL
+
+This project report titled “Deep Learning - Based Placement Skill Gap Analysis" “ 
+Submitted by:
+is approved for the degree of Bachelor of Technology in Computer Science and Engineering.
+
+Examiner(s)
+
+________________________
+________________________
+________________________
+
+Supervisor
+________________________
+
+Project Coordinator
+_____________________
+ABSTRACT
+Campus placements are a very important result of getting an engineering degree. However, many schools still rely on manual checks and gut feelings to help students prepare for job interviews. This paper introduces a Placement Skill-Gap Analyser, a two-part deep learning system. It uses data to accurately predict how well students will do in placements and creates organized, useful reports on the skills they need to improve.
+
+The suggested design handles two very different types of data at the same time. A Fast Path ensemble, which combines Support Vector Machine, Logistic Regression, and XGBoost, works with organized academic details like CGPA, the number of internships, aptitude scores, and soft skills ratings taken from a dataset of 1,500 student records. At the same time, a Deep Path ensemble combines a carefully adjusted DistilBERT transformer with a mix of CNN and LSTM models to pull out meaningful information from unstructured resume text. The results from both paths are combined using a weighted average that is optimized for validation, which creates one accurate probability for placement.
+
+In addition to making predictions, the system has a skill gap engine that looks at a candidate's resume and compares it to a specific job description. It uses a carefully selected list of technology skills to show which skills match, which skills are missing, and which skills are extra. It also gives a score to show how well the candidate's skills fit the job. The results are shown on an interactive Streamlit dashboard that includes radar charts and gauge visuals. This makes it easy for both students and placement coordinators to understand the insights without needing any technical skills.
+
+In a separate test group of 300 samples, the combined model reaches a Macro-F1 score of 0.7463 and an AUC of 0.8468, showing that it performs well compared to the individual path models. The system offers a flexible, easy-to-understand, and useful approach to connect the needs of graduating students with what industries expect from them.
+TABLE OF CONTENTS
+Certificateii
+Acknowledgementiii
+Declarationiv
+Abstractv
+Table of Contentsvi
+List of Figuresvii
+List of Tablesviii
+CHAPTER 1: INTRODUCTION1
+1.1  Background 1
+1.2  Problem Statement 3
+1.3  Motivation 4
+1.4  Objectives 5
+1.5  Scope of the Work 5
+1.6  Organisation of the Report 6
+CHAPTER 2: LITERATURE REVIEW7
+2.1  Overview of Existing Approaches 7
+2.2  Summary of Related Works (Tables 1-3) 8
+2.3  Research Gap Analysis 13
+2.4  Transition to Proposed Approach 14
+CHAPTER 3: PROPOSED METHODOLOGY15
+3.1  System Architecture Overview 15
+3.2  Dataset Description 17
+3.3  Data Preprocessing and Augmentation 19
+3.4  Face Detection Module – YOLOv8n 21
+3.5  Mask Classification Module – MobileNetV2 23
+3.6  Smart Person Tracking Algorithm 26
+3.7  Web Monitoring Dashboard 28
+3.8  Audio Alert System 30
+CHAPTER 4: IMPLEMENTATION31
+4.1  Development Environment 31
+4.2  Dataset Organisation 32
+4.3  Model Training Configuration 33
+4.4  Training History and Callbacks 34
+4.5  Real-Time Detection Integration 37
+4.6  Dashboard and Alert Integration 39
+CHAPTER 5: RESULTS AND DISCUSSION41
+5.1  Training Performance 41
+5.2  Detection Results 44
+5.3  System Performance Metrics 46
+5.4  Comparison with Prior Work 47
+5.5  Discussion 49
+CHAPTER 6: CONCLUSION AND FUTURE WORK51
+6.1  Conclusion 51
+6.2  Limitations 52
+6.3  Future Work 52
+REFERENCES54
+APPENDIX A: Individual Contributions57
+APPENDIX B: Hyperparameter Summary58
+
+List of Figures
+Figure
+                          Title
+Figure 3.1
+End-to-end system architecture of the proposed skill-gap analysis system
+Figure 3.2
+Dual-path workflow diagram: Fast Path (tabular) and Deep Path (text)
+Figure 3.3
+Sample student record structure: academic features and resume text
+Figure 3.4
+Text preprocessing pipeline: cleaning, lemmatization, and skill ontology mapping
+Figure 4.1
+Feature importance from XGBoost fast path model
+Figure 4.2
+DistilBERT performance: confusion matrix and probability distribution
+Figure 4.3
+CNN-LSTM performance: confusion matrix and probability distribution
+Figure 4.4
+Weighted fusion results: specificity vs. sensitivity trade-off
+Figure 4.5
+Skill gap engine: incorrect keyword extraction (before whitelist fix)
+Figure 4.6
+Skill gap engine: accurate extraction after whitelist-only approach
+Figure 4.7
+Fast Path Ensemble performance: sensitivity, specificity, and probability separation
+Figure 4.8
+Deep Path Ensemble performance: balanced sensitivity and specificity
+Figure 5.1
+Training and validation metrics: Fast Path models
+Figure 5.2
+Training and validation metrics: Deep Path models (DistilBERT & CNN-LSTM)
+Figure 5.3
+Streamlit dashboard: placement probability gauge and skill radar chart
+Figure 5.4
+Sample skill gap report: matched, missing, and extra skills visualization
+LIST OF TABLES
+Table
+Title
+Table 2.1
+Summary of existing approaches and research findings (Papers 1–8)
+Table 2.2
+Research gap analysis: gaps in existing work vs. proposed improvements
+Table 3.1
+Dataset class distribution across train/validation/test splits
+Table 3.2
+Data preprocessing and augmentation parameters
+Table 3.3
+Tools and libraries used in the project
+Table 3.4
+Probability distribution patterns by model
+Table 4.1
+Software and hardware environment specifications
+Table 4.2
+Python library versions used in the project
+Table 4.3
+Training hyperparameter configuration overview
+Table 4.4
+SVM configuration and cross-validation results
+Table 4.5
+Logistic Regression configuration and cross-validation results
+Table 4.6
+XGBoost configuration and cross-validation results
+Table 4.7
+Feature importance ranking (XGBoost)
+Table 4.8
+DistilBERT fine-tuning configuration
+Table 4.9
+DistilBERT training progress (epoch-by-epoch)
+Table 4.10
+CNN-LSTM architecture configuration
+Table 4.11
+CNN-LSTM training progress (epoch-by-epoch)
+Table 4.12
+Fusion layer grid search space
+Table 4.13
+Optimal fusion weights and threshold (validation)
+Table 4.14
+Threshold sweep results on test set
+Table 4.15
+Fast Path individual model performance comparison
+Table 4.16
+Deep Path individual model performance comparison
+Table 4.17
+Fusion model final performance
+Table 5.1
+Final model performance at optimal checkpoint
+Table 5.2
+Comparison of proposed system with prior works
+Table A.1
+Individual contributions by team member
+Table B.1
+Dataset overview and properties
+Table B.2
+Class distribution by split
+Table B.3
+Feature dictionary (Fast Path)
+Table D.2.1–D.2.6
+Confusion matrices: SVM, Fast Path Ensemble, DistilBERT, CNN-LSTM, Deep Path Ensemble, Fusion
+
+[Heading1] CHAPTER 1: INTRODUCTION
+[Heading2] 1.1 Background
+[Heading2] Thousands of students across the country graduate every year having learned what colleges deem to be sufficient in an engineering curriculum. They leave campus with a degree and a transcript proving they successfully passed all of their courses and are hoping their grades are good enough to guarantee a job. For the students, this is not enough. The cause of this dissatisfaction is not that students are too unintelligent, or that they didn't work hard enough, it's that they don't know enough. The difference between what they are being taught and what employers are looking for isn't always evident until it is too late for the placement offices. This project is intended to combat this issue.
+[Heading2] Over the past 10 years, student recruiting methods have evolved immensely. Companies that deal with technology will no longer hire a student based on the institution from which they graduated. Today, a job description for a Data Scientist may list requirements such as "must have skills in Python, scikit-learn, SQL, cloud platforms and version control." All of these things are either not taught at all in a college setting or are rarely taught in great depth and combination as the job description requires. A student's resume might list that they have all of these skills, but currently, there is no method of accurately assessing whether or not this is true, leading to a student/company mismatch.
+[Heading2] Utilising advancements such as natural language processing and deep learning, we can derive greater insight from text. Models such as BERT and DistilBERT are adept at deriving an understanding of the language used within text, such as sentiments or subject matter. Other models that combine these techniques have also proven successful in classifying text. We can leverage this technology in order to create a system capable of understanding a student's resume in the same way that a recruiter would, without simply focusing on the numbers.
+[Heading2] You cannot create a full picture with just numbers. The numbers allow for a measurable and verifiable quantity to be produced, whereas the text is the relevant and meaningful information that contextualises the numbers. A student with a poorer academic ability but relevant skills may get the job offer in place of a student who has better grades. Likewise, a student with good grades but a weak, irrelevant resume will not excel in an interview. In order to produce a reliable model for predicting a student's employability, numbers and text must be able to complement one another, which the Placement Skill-Gap Analyser in this paper addresses. Currently, new LLMs such as LLaMA and GPT-4 allow for fake data to be generated. Unfortunately, access to real resumes can be difficult to obtain due to privacy concerns and for that reason, the resumes used in this study are generated by an LLM. 400 Resumes for eight technology jobs and 1068 actual job descriptions. To train the deep learning components of the system. This is one of the ways we overcome the challenge of lacking sufficient data within ed tech research.
+[Heading2] 1.2 Problem Statement
+[Heading2] The current methods schools use to guide students into careers are not good. Today, schools tend to manage their students through spreadsheets and interviews. Relying on the intuition of school counsellors, these systems are not effective enough for the multitude of students in a school and do not provide the students with clear feedback regarding areas of improvement.
+[Heading2] There are three challenges with the current systems:
+[Heading2] Determining the likelihood of job placement: Can a student's resume and transcripts give us a clear indicator if that student is going to find a job? We have models that can read numbers, and we have models that read text, but a combination of both can only give us a complete picture of a student.
+[Heading2] Determining skill deficiency: When a student is seeking a job, what skills does the student possess, and what skills are missing? A student's resume should ideally be a tool that not only indicates the student's skills, but also how to improve on a skill or obtain a new skill.
+[Heading2] Understanding why job placement may not occur: even if a student's chances of finding employment are less than desirable, there must be a method of informing the student as to why. Students need to understand the shortcomings of their profiles and receive direction on how to fix them.
+[Heading2] The goal of this project is to try to fix these challenges by creating a system that can take a student's profile and predict if a student will receive employment, as well as identify what students need to improve on. A user must feel as though the placement system has given them concrete and useful advice, which it has a certain level of confidence in predicting.
+[Heading2] 1.3 Motivation
+[Heading2] There are two main reasons for carrying out this work: this problem is interesting to research and useful. In the initial brainstorming stage, we had a hypothesis: that the outcomes of job placements are neither random nor entirely correlated to the GPA of the student. There are a few factors that can influence a student's passing the first stage of job applications, which is an automatic screening of their resume, and these factors can be numbers or the student's profile. Analysing these factors and how they influence each other can be stated as a problem that can be tackled with technology but which is also related to real students and their careers.
+[Heading2] From a learning point of view, this problem can be a new approach to new machine learning methods that combine established techniques with newer ones, such as transformers, in the field of education technology. The idea to combine different types of information (numbers and text) is grounded in the assumption that numbers are more or less relevant depending on the student and that an optimal way of combining them needs to be found by trying out different options rather than just asserting that a given method works best.
+[Heading2] From a perspective, it is obvious that this research should be undertaken because the careers advisors in most schools are overwhelmed and do not have the resources to analyse every single student. They cannot give each student personalised advice based on the data. A tool that can rapidly analyse a student's resume and a job description, calculate the match between the two and determine what skills are missing can truly tackle the problem if it's able to do it within seconds, acting as an aid for careers advisors rather than as their replacement.
+[Heading2] 1.4 Objectives
+[Heading2] The primary objectives of the present project are as follows:
+[Heading2] To develop a system that would analyze two sources of information: a student's academic data and the textual resume of the student. After analyzing both these sources of data, the system should be able to predict the industry where the student is most likely to get employed.
+[Heading2] To develop an approach for prediction which would use three machine learning approaches: SVM, Logistic Regression and XGBoost. Since these approaches will be trained on unbalanced data, we would make use of several techniques, such as SMOTE and class-weighted loss, to increase the accuracy of these approaches.
+[Heading2] To develop an efficient natural language understanding module that would make use of the DistilBERT transformer as well as the CNN-LSTM model. Both these approaches will be trained on text data, enhanced by LLaMA and GPT.
+[Heading2] To develop a tool which would compare the skills required for the job against the skills possessed by a student and would identify skills which are needed to be developed further. The tool will make use of a pre-defined list of skills to improve its accuracy.
+[Heading2] Development of a website, which will be intuitive enough for individuals lacking computer skills, where students and employment advisors can easily view their chances of employment and identify the necessary areas of improvement to become employed. Pictures and charts will be used in order to present results understandably.
+[Heading2] Conduct performance evaluation and testing of individual components of our application based on measures such as Macro-F1 score and AUC to determine comparative performance between separate components versus the entire system performance. This task involves testing a total of 300 samples reserved for this specific purpose.
+[Heading2] Scope of the Work
+[Heading2] This project focuses on an system which compares student records and job description to determine missing student skills. There are two data inputs into the system: a list of student records containing things like student grades, extracurricular activities, etc. And a corpus of text associated with jobs and resumes.
+[Heading2] The system is intended for universities who are seeking to place students into technology fields. There are eight types of technology jobs to choose from: Data Scientist, ML Engineer, Backend Developer, Frontend Developer, Full Stack Developer, Python Developer, Cloud Engineer, and Mobile App Developer. These are all technology job types that employers tend to recruit on campus.
+[Heading2] There is a list of technology skills the system compares against the student records and job descriptions. This list is comprised of over 50 technology skills. This does not cover all possible technology skills, and must be updated periodically as the technology landscape continues to change. The system does not actually assess whether or not students possess the skills, rather whether the skills are present in the system's data of their records and resumes.
+[Heading2] The system is a standalone application designed to be run on a machine, not directly linked into a college's student information system or job placement website (though that is a potential feature that may be developed). It reads resumes and job descriptions in PDF format and outputs the result to the screen, and can also generate a report downloadable as a JSON file.
+[Heading2] This system was tested using one specific set of student records and job descriptions. Its capabilities are defined only by its ability to do so, and no general statement is made on what results may be achieved with different inputs.
+[Heading2] 1.6 Organization of the Report
+Here is how the report is organised. Chapter 2 discusses the work others have done. It is about how people have tried to decide where someone should work, how they analyzed resumes, used NLP to determine someone's skills and created systems to analyse certain types of information.
+
+Chapter 3 discusses the tools that we used and how we applied them. There were three sets of data used. We did many things to prepare our data and we explain what those were and in how many steps we completed them. There was a system created made of two components, and we have pictures to illustrate this system. We made some decisions about parameters for the six small components that are part of the bigger system and determined how they would be integrated and measured.
+
+Chapter 4 describes what we found. We report on the performances of individual models and integrated systems, and of the missing skills component of the system. We report the requirements to run the system.
+
+In chapter 5, we summarise our work and findings. We discuss the limitations of our system and suggest directions for future research (e.g. real-world application and the inclusion of more skills).
+
+Chapter 6 contains all the references used and presented in the appropriate format. In chapter 7, we list supplementary material such as a mapping of skills to descriptions, example system input files and their corresponding configurations. Chapter 8 consists of summaries for each individual researcher about their contribution to the system.
+
+CHAPTER 2: LITERATURE REVIEW
+[Heading2] 2.1 Overview of Existing Approaches
+[Heading2] There have been several developments in the field of predicting student placements and analysis of their skills gaps in the last ten years due to two primary reasons: the high rate of graduate unemployment and availability of rich datasets among academics. This review highlights three major research areas in the body of work studied in this project: machine learning-based placement prediction based on tabular dataset of academics, employability modeling using multi-dimensional datasets, and skill extraction using NLP techniques based on resume and job description.
+[Heading2] 2.1.1 Tabular Feature-Based Placement and Employability Prediction
+[Heading2] The earliest, and most widely researched approach to placement prediction is to train supervised classifiers on structured academic data. 
+[Heading2] Muhammad Al investigated student employability, working with data from 218 undergraduates at a Nigerian University, employing decision tree, logistic regression, and random forest classifiers together with k-means clustering. They achieved promising results with random forest classification, which gained a prediction accuracy of 98%, and F1-score of 0.99. A particularly interesting methodological observation to take from this work is that the authors employed k-means to derive the target label for student employ-ability, when this label (employ-ability status) was unavailable in the original data set. While it's certainly a creative, if circular approach (the clusters' definitions were implicitly derived, so the classifier learned to predict the definition of the clusters), the input data set comprised only six features, predominantly CGPA and industry work experience scores, rendering the results of limited generalizability.
+[Heading2]  Ruparel & Swaminarayan were more systematic, conducting a comparative evaluation of eight classification algorithms, ranging from logistic regression and random forest to decision tree, Naive Bias, SVM, KNN, gradient boosting and LDA. The authors used stratified k-fold cross-validation, as well as treating outliers by the inter-quartile range. Logistic Regression and SVM classifiers each gained an accuracy of roughly 94%.
+[Heading2]  Anusha provides a more application-oriented investigation, presenting a custom-built multi-layer artificial neural network which, along with four classical classification algorithms was tested on a 10,000-record Kaggle Placement dataset, taking into account IQ score, communication skill, number of projects completed and extracurricular involvement. An ANN designed with dropout regularisation and early stopping gained an accuracy of 99.65%, with almost perfect recall and precision - values so high they could indicate either an already fully saturated dataset, or extreme class separability. Also useful in Anusha's work is a feature importance study, from which it was concluded that CGPA and number of projects were strong predictors of placement, whilst extracurricular sport participation and previous internship experience had a low impact, which can be considered in selecting features for the tabular part of the proposed system.
+[Heading2] 2.1.2 NLP-Based Skill Extraction from Job Descriptions and Resumes
+[Heading2] As much as the prediction literature in the placement area tries to establish what types of individuals will be employed, there is another related stream of literature that examines what skill sets are required and whether a particular applicant has those. Akkasi proposed an ensemble-based approach using transformers for the task of identification of technical as well as non-technical skills from job descriptions, employing a convolutional neural network (CNN), bidirectional long short-term memory (BiLSTM), BiLSTM with conditional random fields (CRFs), and BERT in a multi-task learning setting based on 22 IT occupations. The ensemble approach with multi-task learning yielded F-scores of 67% for soft skills and 72% for hard skills, beating BiLSTM+CRF baselines by 6-10%.
+
+[Heading2] 2.2 Summary of Related Works
+Table 2.1: Summary of Existing Approaches and Research Findings (Papers 1–8)
+No.
+Author & Year
+Methods/Techniques
+Dataset
+Accuracy
+Key Findings
+1
+Muhammad Hadiza Baffa et al. (2023)
+
+Logistic Regression, Decision Tree, Random Forest, K-Means Clustering
+
+Primary dataset of 218 students 
+Accuracy: 98% (Random Forest), F1-score: 0.99
+
+Random Forest achieved the highest performance; inclusion of academic + extracurricular features significantly improves employability prediction 
+2
+Milind Ruparel & Priya Swaminarayan (2025)
+
+Logistic Regression, Random Forest, Decision Tree, Naïve Bayes, SVM, KNN, Gradient Boosting, LDA
+
+College Placement Predictor Dataset 
+Accuracy: 94% (KNN, LR, SVM)
+
+Ensemble and optimized ML models significantly improve placement prediction; preprocessing.
+3
+Abhinav Pathak et al. (2025)
+
+Decision Tree, Logistic Regression Hyperparameter Tuning, Cross-validation
+
+Kaggle Placement Dataset 
+Training Accuracy: 96%,
+ Test Accuracy: 64.62% (baseline RF); 
+
+Ensemble models outperform individual models; internships and CGPA strongly influence placement outcomes
+4
+Pooja Thakar (2016)
+
+Clustering (K-Means), KNN, Naïve Bayes, Decision Tree, ANN
+
+Large dataset (8973 students, 152 attributes: academic, psychometric, demographic)
+
+Accuracy 89.23%
+Clustering-based preprocessing improves classification accuracy and reduces dimensionality in large educational datasets
+5
+Radiah Haque et al. (2024)
+Logistic Regression, Random Forest, Naïve Bayes, SVM, XGBoost, ANN
+Malaysia Graduate Tracer Study
+Accuracy: 80%
+ANN outperformed classical models; student satisfaction + academic features significantly impact employability prediction
+6
+Posina Anusha (2025)
+ANN, Logistic Regression, SVM, Random Forest, KNN
+College Student Placement Dataset (10,000 records, Kaggle)
+Accuracy: 99.65%, Precision: 100%, Recall: 99.89%, F1-score: ~99.9%
+ANN significantly outperforms traditional models by capturing complex feature relationships; strong generalisation ability
+7
+Abbas Akkasi (2024)
+Transformer + CNN + BiLSTM + CRF (Ensemble Model), LIME
+Annotated Job Description Dataset (multi-platform scraped data: LinkedIn, Indeed, Glassdoor)
+[NormalWeb] F1-score: 72% (technical skills),
+67% (non-technical skills)
+Hybrid transformer-based ensemble significantly improves skill extraction compared to CRF and traditional DL models
+8
+Vaishali Jabade et al. (2025)
+NLP, NER, Machine Learning, Resume Parsing
+[NormalWeb] Resume dataset (
+multi-domain resumes: DS, Web, Android, UI/UX)
+Accuracy: 92.4%, Precision: 87.6%
+NLP-based resume analysis effectively extracts skills and improves job matching and recommendation systems
+
+[Heading2] 2.3 Research Gap Analysis
+The survey above reveals several persistent gaps in the existing body of work. These gaps collectively define the space of improvements that this project targets.
+Table 2.2: Research Gap Analysis – Gaps in Existing Work vs. Proposed Improvements
+Limitations in Existing Literature
+Improvement in the Proposed System
+Most placement prediction studies mainly use structured academic data such as CGPA, marks, and internship counts. They do not consider the valuable information present in resumes and textual profiles.
+The proposed system uses a dual-path architecture where structured academic features are processed using SVM, Logistic Regression, and XGBoost, while resume text is analysed separately using DistilBERT with CNN-LSTM. This allows the model to learn from both academic performance and resume content together.
+Existing ensemble approaches combine only similar types of machine learning models and do not integrate outputs from tabular-data models with text-based deep learning models.
+A weighted fusion mechanism combines predictions from both the Fast Path and Deep Path models. The system automatically searches for the best fusion weight and decision threshold using validation data for improved prediction accuracy.
+Most reviewed systems provide only a final placement prediction or probability score. They do not explain which skills match a job role or identify missing competencies.
+The proposed system includes a Skill Gap Analysis Engine that identifies matched skills, missing skills, and additional skills by comparing resumes with job descriptions. It also generates a skill match percentage score for better career guidance.
+Several studies use simple train-test splitting methods or clustering-based pseudo labels. Very few address class imbalance effectively, and none use SMOTE-based oversampling.
+The proposed framework applies stratified dataset splitting along with SMOTE oversampling only on the training data to avoid data leakage. Additionally, class-weighted learning is used to improve minority-class prediction performance.
+Existing datasets are relatively small or limited to a single university or region, reducing the generalizability of results across different job domains and candidate profiles.
+The proposed system utilises a larger and more diverse dataset, including structured placement records, AI-generated resumes across multiple technology roles, and over a thousand real-world job descriptions to improve robustness and adaptability.
+Most prior works focus only on research metrics such as accuracy and confusion matrices, with limited practical usability for students or recruiters.
+A complete Streamlit-based web application is developed with interactive visualisations such as gauge charts, radar charts, skill indicators, and downloadable reports, making the system practical and user-friendly for real-world usage.
+
+[Heading2] 2.4 Transition to the Proposed Approach
+From the above literature review, it is evident that although there have been many studies on binary mask detection and their accuracy levels have been relatively high, the issue of three-class detection, tracking, and monitoring is still open. In total, this literature review gives various design considerations regarding this project as follows: first, MobileNetV2 together with transfer learning will work best for the classification stage in terms of accuracy and efficiency; second, YOLO-type object detectors should be used in face detection; and lastly, the use of large Kaggle datasets (10,000+ pictures) is sufficient for training when coupled with extensive data augmentation.
+In particular, the proposed solution will leverage from the design lessons outlined above by breaking ground on three aspects as follows: addition of "incorrect mask," introduction of smart tracking, and development of a web monitoring platform. This will be explained in detail in the subsequent chapter.
+[Heading1] CHAPTER 3: PROPOSED METHODOLOGY
+[Heading2] 3.1 System Architecture Overview
+The dual-path deep learning architecture is followed by the system. The input layer receives one student record at a time from test.csv and simultaneously passes structured academic features to the fast path and resume text to the deep path. The features in the fast path pass through Binary Encoding, IQR outlier capping, StandardScalar normalization, SMOTE balancing and train SVM, Logistic Regression, and XGBoost models (ensemble). The deep path pass clean and lemmatised text through a fine-tuned DistilBERT transformer and a CNN-LSTM model. The fusion layer of the two path outputs is generated and is an aggregate by weights that are learned on the validation set using grid search. The minimum weight of the deep path was restricted to 0.20 so that there is a contribution from both paths. The final output layer generates a placement probability skill match score and a list of missing skills. The phase 5 skill gap engine generates a canonical skill purpose by training separately on gptdataset.csv and jobdataset.csv, and this is only used at inference time. Each stage is detailed separately below under the respective subsection, and they are linked together as shown in the Fig 3.1.
+Figure 3.1 below presents the high-level schematic of the entire pipeline, from live video input through to final dashboard output.
+
+FIGURE 3.1 – SYSTEM ARCHITECTURE DIAGRAM
+
+Figure 3.1: End-to-end system architecture of the proposed skill-gap analysis system.
+[Heading2] 3.2 Dataset Description
+Three datasets will be used in this project. Their roles are different.
+Firstly, the primary dataset called test.csv comprises 1500 students' data that were artificially created to simulate actual placements at university campuses. For each student, there are three fields: JSON block with 10 academic features: CGPA, Internships, Project Workshops and Certification, Aptitude Test Score, Soft Skills Rating, Extracurricular Activities, SSC Marks, and HSC Marks; response part with a resume text (natural language overview of the student profile); and labels, i.e., Placed/NotPlaced. There are 42% of Placed cases and 58% of NotPlaced cases in the sample.
+Secondly, the dataset gpt_dataset.csv consists of 400 GPT-generated resumes in eight categories (Python developer, data scientist, cloud engineer, mobile app developer, etc.). This data set is not going to be used for model training purposes. The sole purpose of this dataset is to be a corpus of skills vocabulary.
+Thirdly, there is a dataset called job_dataset.csv consisting of 1,068 job descriptions, where there are four columns – title, skills, responsibilities, and keywords. The purpose of this dataset is to extract required skills from the uploaded job description.
+Table 3.1: Dataset Class Distribution
+Class Label
+Split
+Training Samples
+Validation Samples
+Test Samples
+Total
+Placed
+     1
+      441
+          63
+        126
+           630
+Not Placed
+     0
+      609
+         87
+       174
+           870
+Total
+
+     1050
+        150
+       300
+          1,500
+
+[Heading2] 3.3 Methodologies Adopted
+Data Preparation – Split the Dataset into training, validation and test sets using stratified sampling, preserving class distribution 70-10-20. These sample indices were used in both structured and text splits, assuring that row i in the fast-path training set is the same student in the deep-path training set.
+
+Structured Data Preprocessing - Encoded binary columns (Extracurricular activities and placement training) from yes/no strings to 1/0 integers. Performed outlier capping using the IQR method, where any values beyond Q1 - 1.5IQR and Q3 + 1.5IQR are clipped. Columns with zero IQR were omitted, which was required to prevent collapse in variance. Standard scalar fitted on the train set alone and applied on the train, validation, and test sets to avoid data leakage. SMOTE was performed only on the train set where it created synthetic minority class samples and balanced the classes to 609/609
+
+Text Preprocessing - All the text within resume was fed into a four stage pipeline. It first involved cleaning the noise from resume which includes email ids, phone numbers, URLs, special characters like bullets, non-ASCII characters by using compiled regular expressions. Next it lower cased the text, removed punctuations while keeping the hyphen and removed NLTK stop words. Next, it utilized a custom skill ontology where over 50 synonymous terms were mapped to a single skill form, eg. Reactjs to react and scikit-learn to sklearn, before matching skills. It then used spaCy lemmatization with the encoreweb_sm model to obtain the base form of words.
+
+ Fast path Training- Three models (SVM, Logistic Regression, XGBoost) were trained on the processed structured features.SVM: used RBF kernel with C=10 and weight=balanced. Logistic Regression: c=1.0 with weight=balanced.XGBoost: n estimators = 300, learningrate=0.05, maxdepth=6, scaleposweight=1.0 (after SMOTE balance). All three models were cross-validated using 5-fold stratified cross-validation. Final models were trained on the full dataset, and the average of their predicted probabilities formed the output of the fast path ensemble.
+
+Deep path Training- Fine-tuning DistilBERT for four epochs with AdamW with a learning rate of 2e-5, 10% linear warm-up, gradient clipping at 1.0 and class-weighted cross entropy loss. The maximum token length was set to 256 so as not to truncate the lengthier response text. The model checkpoint was saved per epoch according to the validation Macro-F1 score. For CNN-LSTM, an embedding layer of dimension 128 over a vocabulary of 10,000 words, three parallel Conv1D layers each with kernel sizes 3, 4 and 5 producing 128 feature maps, a two-layer bidirectional LSTM with 128 hidden units, 0.4 dropout and a final linear classification layer were used. Both models were trained using class-weighted loss. Their predicted probabilities were averaged to generate the deep path ensemble output.
+
+Fusion layer - The Fusion layer had a grid search from fast path weights 0.0-0.80 with increments of 0.05 and classification thresholds from 0.30 to 0.65. A minimum fast path weight of 0.20 was imposed, ensuring both paths remained in effect. The weights/thresholds that provided the highest Macro F1 on the validation set were chosen and applied once to the test set.
+
+Skill Gap Engine - Extracted skills using a whitelisted approach on both resume and job description texts and using the same canonical ontology used in preprocessing. The score of match skills was calculated by the number of matched skills over the total number of skills in the job description. Unmatched skills were defined as the set difference between skills in job description and the resume.
+
+Table 3.2: Data Augmentation Parameters Applied During Training
+Parameter
+Value / Range
+Purpose
+Train / Val / Test split
+70 / 10 / 20 %
+Stratified split preserving a 42/58 class ratio across all three sets
+SMOTE 
+441 → 609 (Placed)
+Balances training class distribution from 441/609 to 609/609
+SMOTE ( k neighbours )
+5 (default)
+Controls how synthetic samples are interpolated in feature space
+IQR outlier cap
+Q1 − 1.5×IQR to Q3 + 1.5×IQR
+Removes extreme values without deleting rows
+StandardScaler (mean)
+          0
+Centres each numeric feature for SVM and Logistic Regression
+StandardScaler (std)
+           1
+Ensures no single feature dominates due to scale differences
+Text vocabulary size (CNN-LSTM)
+    10,000 words
+Covers domain-specific resume vocabulary
+Text sequence length (CNN-LSTM)
+    300 tokens
+Padded/truncated to fixed length for batch processing
+Text max token length (DistilBERT)
+     256 tokens
+Captures full student overview without truncation
+Gradient clipping
+     1.0
+Prevents exploding gradients during DistilBERT training
+Dropout rate (CNN-LSTM)
+        0.4
+Reduces overfitting on limited training text
+Class weight - Not Placed
+       0.724
+Upweights minority class in the cross-entropy loss for the deep path
+
+Table 3.3: Tools Used
+Category
+Tools
+Language
+
+Python 3.11
+Data Processing for structured data
+Pandas, NumPy
+Data Processing for Text Data 
+NLTK, spacy
+Fast Path
+SVM, Logistic Regression, XGBoost
+Deep Path 
+CNN-LSTM, DistilBERT
+Fusion Model
+Weighted combination (w_fast=0.45, w_deep=0.55, thr=0.55)
+
+[Heading2] 3.5 Experimental Setup
+All experiments were performed on one local computer using the Windows 11 operating system with an Intel processor and without a discrete graphics card. Since DistilBERT was pre-trained on a computer running on a CPU, it took about 30–60 minutes for one epoch of training.
+
+Data Configuration
+In the case of the main dataset, 1,500 examples of students have been taken from the test.csv file. There has been a division of data into training, validation, and testing sets in a 70/10/20 ratio, which means that there are 1,050 training examples, 150 validation examples, and 300 testing examples. Data is stratified with respect to a 42/58 ratio of placed/unplaced students. The same seed 42 is used for all divisions.
+
+Fast Path Setup
+For the cases of fast path models, the training set consists of 1,218 entries, which have been generated by using the technique called SMOTE, where 1,050 entries of the training dataset were augmented by another 168 synthetic "Placed" entries. The StandardScaler method will be used for processing the initial 1,050 entries of the training dataset before performing SMOTE. Fivefold stratified cross-validation will be performed on each model before final model training to ensure that the model gets reliable generalisation ability estimation.
+
+Training of Deep Path Models
+Both deep models were trained using 1,050 samples without any use of the SMOTE technique because text augmentation was not performed. DistilBERT was taken from the Hugging Face library using its DistilBERT base-uncased checkpoint, and the model was fine-tuned for 4 epochs, using a batch size of 16 and a maximal length of 256 tokens. For the second model, the training was performed for 10 epochs, with the same loss function, but with a batch size of 64 and a maximal length of 300 tokens within the vocabulary of 10,000 words. For both models, class-weighted cross-entropy loss was used, where the weight was derived based on the distribution of classes within the training set.
+
+Fusion Layer Setup
+The two models were trained on 1,050 samples without using SMOTE because the text augmentation was not used. For the DistilBERT, the model from Hugging Face was downloaded from the checkpoint of DistilBERT base-uncased and was trained for 4 epochs with a batch size of 16 and a maximal token length of 256. As for the CNN-LSTM, it was trained for 10 epochs with a batch size of 64 and a maximal token length of 300 within the vocabulary of 10,000 words. The class-weighted cross-entropy loss was applied for training the models with weights obtained based on the data distribution during the training.
+
+Leakage prevention
+Steps that were taken to mitigate data leakage include three key measures. First, StandardScaler and IQR capper were trained only on the training data and applied to the validation and testing data without any re-training. Second, SMOTE was applied to the training data, post-splitting the dataset into training, validation, and test data sets.
+
+3.6 Evaluation Metrics and Performance Measures
+Evaluation methodology employed in this case took into consideration the issue of imbalance within the data set, where 42% were classified as Placed, while 58% as Not Placed. The problem with such a scenario is that accuracy could not be used because the prediction of all records as Not Placed would make the accuracy 58% but it would serve no purpose. The following are some of the methods used to analyze the performance of the classifiers.
+
+The first method used is Macro-F1. Macro-F1 is the method of evaluating the classifiers using the F1 score for each class independently and then taking the average of the two classes. This way, it does not favour any particular class.
+
+AUC-ROC is the second method which is used to measure the performance of the classifiers. It takes care of the problem with threshold because it is independent of threshold and is useful in calculating how often a classifier ranks a positive example higher than a negative example.
+
+Precision evaluates the percentage of students classified as Placed who were actually placed.
+
+While Recall measures the percentage of those actually placed and classified by the classifier.
+
+Confusion Matrix
+[ListParagraph] CNN-LSTM produces the largest false negative percentage (38.9%) – almost two out of every five students being placed is not detected, thus, it cannot be trusted when it comes to the prediction of placement.
+[ListParagraph] The model DistilBERT produces the greatest percentage of false positives (33.3%) – it predicts more placements than there are, which may create unnecessary expectations.
+[ListParagraph] The Fast Path Ensemble model is optimal in terms of producing minimal false negatives (19.8%) while maintaining an acceptable level of false positives (22.4%).
+[ListParagraph] The method of Fusion gives low false positives (20.7%), but generates a higher number of false negatives (30.2%).
+
+Probability Distribution Insights
+Table 3.4: Probability Distribution Histograms 
+
+Model
+Distribution Pattern
+     Separation Quality
+DistilBERT
+Strong bimodal separation — "Not Placed" peaks near 0.1, "Placed" near 0.75
+
+             Excellent
+Fast Path Ensemble
+Moderate separation with overlap in 0.4–0.6 region
+             Good 
+CNN-LSTM
+Significant overlap throughout 0.2–0.6 range
+             Poor
+Deep Path Ensemble
+Better than CNN-LSTM, overlap in 0.3–0.5
+             Moderate
+Fusion
+Improved separation with shifted threshold at 0.55
+             Good 
+
+[Heading1] CHAPTER 4: IMPLEMENTATION
+[Heading2] 4.1 System Specification
+The entire system was developed and tested on a Windows 11 workstation using Python 3.11. The following table summarises the hardware and software environment.
+Table 4.1: Software and Hardware Environment Specifications
+Component
+Specification
+Operating System
+Windows 11 (64-bit)
+Processor
+Intel Core i5/i7 (Generation 10+)
+RAM
+16 GB DDR4
+GPU
+Not used for inference (CPU-only deployment); GPU used for training (WSL2 note: TF GPU not natively supported on Windows ≥2.11)
+Python Version
+3.11
+Development IDE
+Visual Studio Code with Python extension
+
+Table 4.2: Python Library Versions Used in the Project
+Library
+Version (approx.)
+Purpose
+NumPy
+1.21.0
+Numerical computations, array operations
+Pandas
+1.3.0
+Data loading, preprocessing, and manipulation
+Scikit-learn
+1.0.0 – 1.2.0
+SVM, Logistic Regression, train-test split, metrics (accuracy, precision, recall, F1, AUC), confusion matrix
+XGBoost
+1.5.0 – 1.6.0
+Gradient boosting classifier
+TensorFlow
+2.8.0 – 2.10.0
+Building and training CNN-LSTM architecture
+Keras
+2.8.0 – 2.10.0
+High-level API for neural network layers
+Transformers (Hugging Face)
+4.20.0 – 4.25.0
+Loading pre-trained DistilBERT model and tokenizer
+Matplotlib
+3.5.0
+Plotting confusion matrices and probability distribution histograms
+Seaborn
+0.11.0 – 0.12.0
+Enhanced heatmap styling for confusion matrices
+
+[Heading2] 4.2 Model Training Configuration
+Our project runs in three distinct phases - fast path, deep path, and fusion, each with its own data pipeline. 
+Table 4.3: Training Hyperparameter Configuration
+Parameter
+Setting
+Random Seed
+42 (implied by reproducible splits)
+Fast Path Train Shape
+(1,218, 10)
+Fast Path Val Shape
+(150, 10)
+Fast Path Test Shape
+(300, 10)
+Deep Path Train
+1,050 rows (refined_deep_train.csv)
+Deep Path Val
+150 rows (refined_deep_val.csv)
+Deep Path Test
+300 rows (refined_deep_test.csv)
+Test Class Distribution
+174 Not Placed, 126 Placed (58:42)
+Cross-Validation
+5-Fold Stratified
+Trainable layers
+Last 80 layers + custom head
+
+4.2.1: Fast Path 
+Table 4.4: SVM Configuration
+Hyperparameter
+Value
+Kernel
+RBF
+C
+1.0 (default)
+Class Weight
+balanced
+Probability
+True
+Cross-Val F1
+0.7860 ± 0.0125
+Cross-Val AUC
+0.8393 ± 0.0191
+
+Table 4.5: Logistic Regression Configuration
+Hyperparameter
+Value
+Solver
+lbfgs or liblinear
+Penalty
+l2
+C
+1.0 (default)
+Class Weight
+balanced
+Cross-Val F1
+0.8003 ± 0.0229
+Cross-Val AUC
+0.8757 ± 0.0184
+
+Table 4.6: XGBoost Configuration
+Hyperparameter
+Value
+n_estimators
+~100–300
+max_depth
+3–6
+learning_rate
+0.1
+subsample
+0.8
+colsample_bytree
+0.8–1.0
+scale_pos_weight
+1.0
+Cross-Val F1
+0.7873 ± 0.0195
+Cross-Val AUC
+0.8765 ± 0.0111
+
+Table 4.7: The feature importance that is necessary for training is
+
+                                Figure 4.1 – Feature Importance 
+
+4.2.2: Deep Path
+Table 4.8: DistilBERT Fine-Tuning Configuration
+Hyperparameter
+Value
+Pre-trained Model
+distilbert-base-uncased
+Max Sequence Length
+256
+Epochs
+4
+Batch Size
+16
+Total Parameters
+66,955,010
+Device
+CPU
+Class Weights
+[0.724, 1.000]
+
+Table 4.9: Training Progress (Epoch-by-Epoch):
+Epoch
+Training Loss
+Val Macro F1
+Val AUC
+1/4
+0.6907
+0.5864
+0.6360
+2/4
+0.6690
+0.7046
+0.7833
+3/4
+0.5615
+0.7589
+0.8278
+4/4
+0.5090
+0.7528
+0.8285
+[Heading2] DistilBERT peaked at epoch 3 and started overfitting by epoch 4. Validation Macro F1 dropped from 0.7589 to 0.7528 despite training loss continuing to fall (0.5615 → 0.5090). 
+Table 4.10: CNN-LSTM Configuration
+Hyperparameter
+Value
+Vocabulary Size
+1,791
+Max Sequence Length
+300
+Epochs
+10
+Batch Size
+64
+Total Parameters
+1,086,978
+Optimizer
+Adam (implied)
+
+Table 4.11: Training Progress (Epoch-by-Epoch):
+Epoch
+Train Loss
+Train Acc
+Val Macro F1
+Val AUC
+1/10
+0.7419
+0.539
+0.7246
+0.7763
+2/10
+0.5270
+0.743
+0.6936
+0.8144
+3/10
+0.4639
+0.806
+0.6700
+0.8130
+4/10
+0.4014
+0.816
+0.7266
+0.8188
+5/10
+0.3325
+0.868
+0.7329
+0.8238
+6/10
+0.2843
+0.892
+0.7684
+0.8272
+7/10
+0.2427
+0.910
+0.7450
+0.8296
+8/10
+0.2065
+0.942
+0.7610
+0.8321
+9/10
+0.1911
+0.946
+0.7520
+0.8307
+10/10
+0.1898
+0.946
+0.7520
+0.8311
+[Heading2]  The training accuracy spikes from 53.9% to 94.6%, whereas the validation Macro F1 score remains stable at approximately 0.75-0.77 beyond the sixth epoch. This is a clear case of overfitting, in which the model learns the training data (consisting of 1,791 vocabulary words). The training loss after 10 epochs is only 0.1898.
+
+4.2.3: Fusion Layer
+Table 4.12: Search Space Configuration
+Parameter
+Range
+Fast Path Weight (w_fast)
+[0.00, 0.80] in steps
+Deep Path Weight (w_deep)
+[0.20, 1.00]
+Constraint
+w_deep ≥ 0.2
+Threshold Search
+8 values
+Optimization Metric
+Macro F1 (validation)
+Fast Path Weight (w_fast)
+[0.00, 0.80] in steps
+
+Table 4.13: Optimal Configuration (From Grid Search):
+Parameter
+Range
+Fast Path Weight
+0.45
+Deep Path Weight
+0.55
+Decision Threshold
+0.55
+Validation Macro F1
+0.8300
+Fast Path Weight
+0.45
+Deep Path Weight
+0.55
+
+Table 4.14: Threshold Sweep on Test Set
+Threshold
+Accuracy
+F1
+Macro F1
+AUC
+0.30
+0.7367
+0.7476
+0.7362
+0.8468
+0.35
+0.7500
+0.7525
+0.7500
+0.8468
+0.40
+0.7633
+0.7560
+0.7631
+0.8468
+0.45
+0.7667
+0.7482
+0.7654
+0.8468
+0.50
+0.7600
+0.7231
+0.7557
+0.8468
+0.55
+0.7533
+0.7040
+0.7463
+0.8468 ← selected
+0.60
+0.7600
+0.7000
+0.7500
+0.8468
+0.65
+0.7333
+0.6460
+0.7161
+0.8468
+
+[Heading2] 4.3 Experimental Results and Observations
+Fast Path Results
+When looking at the Macro-F1 score, SVM, Logistic Regression, and XGBoost performed well, with Macro-F1 and AUC scores of 0.7839 and 0.8625, respectively. Individually, XGBoost outperformed other models in test F1 (0.7615) and Macro-F1 (0.7896), while Logistic Regression had the highest AUC value (0.8599), despite having low F1 values. With respect to high recall rate (0.8175), SVM is the most aggressive when placing candidates.
+
+In this case, the cross-validation results agreed with the test scores. In this regard, XGBoost has a difference of 0.026 between CV and test scores, hence generalisable. However, logistic regression had a difference of 0.055, which indicated overfitting, albeit marginally, to the dataset for C=1.0.
+
+As per feature importance in the XGBoost model, the most significant variable is "Extracurricular Activities" at 22.2%, followed by "HSC Marks" (14.8%) and "Placement Training" (12.7%). CGPA and Internship were the least significant variables at 6.4% and 6.0%, respectively. This may be because extracurricular activities had the highest trend in the artificial training data relative to placement performance, an aspect that is likely to be different in actual institutional data.
+Deep Path Results
+The Macro-F1 for the DistilBERT model trained for 4 epochs on the test set was 0.7123, and on the validation set was 0.7873. Macro-F1 was increasing over the course of epochs (0.5864 to 0.7589 at epoch 3) until it hit plateau from epoch 3 to 4 (0.7528 at epoch 4), thus epoch 3 was the best epoch for saving the checkpoint. The probabilities were badly calibrated from the DistilBERT model, where both class outputs have higher probability (> 0.7) as expected for a large language model trained on a small dataset.
+Figure 4.2: DistilBERT achieves high sensitivity (77.8%) but low          specificity (66.7%) due to over-prediction of placements
+
+The individual performance by CNN-LSTM resulted in the worst system, and the Macro-F1 recorded by CNN-LSTM were 0.6831, AUC recorded was 0.7676. From the confusion matrix of the system, CNN-LSTM successfully classifies only 61.1% of the placed, and from the probability distribution, there exists a big overlap between the two classes over the entire range of 0.0-1.0. Because the vocabulary of CNN-LSTM and the embedding used by CNN-LSTM were initialised randomly on the 1,050 text samples, which means that there was not enough information in this specific task to represent words well enough.
+
+Figure 4.3: CNN-LSTM shows moderate specificity (75.3%) but poor sensitivity (61.1%) with overlapping probability distributions.
+
+Deep paths ensemble model, which took the average of predictions of DistilBERT and CNN-LSTM also outperformed CNN-LSTM with Placed recall of 73.0% and AUC 0.7894. The ensemble model application therefore stabilized the prediction and obtained some improvement over the CNN-LSTM model. But there remains the discrepancy of 0.0731 in AUC between the deep path ensemble and fast path ensemble.
+Fusion Results
+The weights for the fusion layer Wfast=0.45 and Wdeep=0.55 were used. The threshold of classification was set to 0.55 through grid search to maximize validation Macro-F1. Final fusion had test accuracy, Macro-F1 and AUC as 0.7533, 0.7463, 0.8468, respectively. From the confusion matrix, we can observe that the cases were classified correctly with 79.3% for Not placed and 69.8% for Placed.
+
+A crucial point to highlight is that the AUC of fusion, 0.8468, lies between the AUC of the fast path (0.8625) and that of the deep path (0.7894). This is a naturally expected outcome for a fusion where a good signal and a poor signal are averaged with a weighting scheme, whereby the good signal is watered down according to its contribution by the poorer signal. We chose to have a minimum weight of the deep path at 0.20, to allow the deep path to have an influence on the final prediction.
+Figure 4.4: Weighted fusion maximizes specificity (79.3%) while sacrificing sensitivity (69.8%) for conservative placement predictions.
+
+Skill Gap Engine Results
+The skill gap engine extracted canonical skills from user-uploaded resumes and job descriptions using the 50-entry ontology and whitelist-based matching. In sample test runs, the engine successfully identified matched skills, missing skills, and extra skills with correct set-difference logic. A skill match score of 1.0 was observed when the job description contained only soft skills that all appeared in the resume, while a score of 0.235 was observed for a technical role with significant hard skill gaps. The engine correctly grouped synonyms: ReactJS and React, AWS and Amazon Web Services, preventing false negatives in skill matching.
+
+Skill Gap Engine: Iterative Improvement and Refinement
+
+The first implementation of the skill gap extraction algorithm tried to apply a common tokenization approach where all alphabetic tokens longer than two characters were considered as skills. After applying the stop word filtering and applying spaCy's lemmatization function to the list, the final list of tokens was used directly for computing set differences.
+
+Figure 4.5: Wrong keywords getting populated 
+
+As one can see in the fig this resulted in a very noisy output. A lot of garbage words like application, base, code, feature, focus, process, tool, and user are present in the matched skills, these are certainly not valid technical skills. Likewise the missing skills lists contains many cities (bengaluru, chennai, hyderabad), many verbs and adjectives (adaptable, effective, efficient, motivated) and many HR terms like compensation, career, hire, interview, office, as well as some information from the personal section in the contact block (jesus, madonna, kavachh). Also, the extra skills list contains garbage words like git.com/vipulvaibhav, linkedin.com/in/vipul, as well as non-technical words related to personal details.Three root causes were discovered:
+[ListParagraph] Root Cause 1 – There is no whitelist filter. The process did not have a condition under which the items would be considered skills. All the tokens left after the stopword filter step became the skills. It implied that all locations, actions, motivational words, and even personal names became included in the set of skills.
+
+[ListParagraph] Root Cause 2 – Insufficient noise filtering. URL segments and LinkedIn profiles paths were not completely cleaned, and therefore, partially formed URLs could get into the tokenized set of skills.
+[ListParagraph] Root Cause 3 – Influence of soft skills on the matching algorithm. Communication, collaboration, and leadership are generic concepts found in almost all resumes and positions, so the inclusion of these terms in the set of matching skills automatically increased the value of the matching skills to 100%, making this measure meaningless.
+
+Significance of the Improvement
+
+To overcome these limitations, a complete redesign of the skill extraction module was performed using a handcrafted ontology of technical skills (TECH_SKILLS), composed of 60 skill categories and over 200 alias entries. The basic design principle changed from "extract whatever is not a stopword" to "extract only what is in the ontology."
+
+Figure 4.6: Skill extraction accuracy after Whitelist-only approach 
+
+Whitelist-only approach led to three tangible benefits regarding the system's performance:
+[ListParagraph] Skill extraction accuracy. Here, only those skills that are related to the technical aspects of professionalism have been considered. The idea behind this is to enable a placement officer/student to make immediate use of this data without filtering out the unnecessary details.
+[ListParagraph] Accuracy of skill match percentage. Since soft skills and generic tokens are no longer part of the calculations, this measurement now truly reflects the similarity between the technical skills of applicants’ CVs and the required skills of job descriptions. Thus, 23.5% actually indicates a huge difference rather than an excessive similarity like nearly 100%.
+[ListParagraph] Reliability of placement percentage. Now, since one of the SkillScore features includes cosine similarity between the TF-IDF vectors of the resume and job description, the placement percentage of 60.4% is calculated in a slightly different way. Before this change, the placement percentage was inaccurate, because when the resume had hundreds of irrelevant tokens, the results considered only the similarities between HR language, descriptive words and geographic locations.
+
+4.4 Performance Analysis
+
+The Advantage of the Fast Path Approach
+The first and foremost thing that can be inferred from this study is the superiority of classical machine learning algorithms trained on ten handcrafted features compared to finetuning an optimized large transformer on raw text. This inference falls in line with previous findings in the literature, which have found that deep learning systems require an order of magnitude more labelled data before they can utilize their natural strengths. With just 1,050 training examples, the 66-million-parameter DistilBERT had a ratio of 63,000 parameters per training example, which posed the significant danger of overfitting. As far as the fast path models are concerned, all three of them are trained on handcrafted features, ten of which are created to be much less free compared to the size of the training dataset.
+The second factor in favour of the superior performance of this model is the features themselves. The ten features: CGPA, internship count, project count, aptitude test score, and academic scores, are direct proxies of placement performance and sampled from the same distribution as the labels.
+Trade-off between Precision and Recall
+The trade-off of all fast path models was the increase in recall in contrast to their precision, which means that recall ranged between 0.79 and 0.82 whereas precision ranged between 0.70 and 0.74. This means that the model will classify more students as Placed falsely, which translates into a false positive result. On the other hand, in the case of students' evaluation, this approach is acceptable because the model will detect the students with placing potentials and notify them about their ability to place..
+
+4.4.1 Individual Model Performance Analysis
+
+Table 4.15:  Fast Path Models 
+Model
+Accuracy
+Precision
+Recall
+F1
+AUC
+Grade
+XGBoost
+0.7933
+0.7388
+0.7857
+0.7615
+0.8461
+GOOD
+Fast Path Ensemble
+0.7867
+0.7214
+0.8016
+0.7594
+0.8625
+GOOD
+SVM
+0.7767
+0.7007
+0.8175
+0.7546
+0.8397
+GOOD
+LR
+0.7700
+0.6966
+0.8016
+0.7454
+0.8599
+GOOD
+
+Figure 4.7: Traditional ML ensemble outperforms all models with 80.2% sensitivity, 77.6% specificity, and clean probability separation
+
+Table 4.16: Deep Learning Models
+Model
+Accuracy
+Precision
+Recall
+F1
+AUC
+Grade
+DistilBERT
+0.7133
+0.6282
+0.7778
+0.6950
+0.7873
+GOOD
+CNN-LSTM
+0.6933
+0.6417
+0.6111
+0.6260
+0.7676
+ACCEPTABLE
+Deep Path Ensemble
+0.7267
+0.6571
+0.7302
+0.6917
+0.7894
+GOOD
+
+Figure 4.8: Deep ensemble balances sensitivity (73.0%) and specificity (72.4%) with reduced but persistent class overlap.
+
+Table 4.17: Fusion Model
+Model
+Accuracy
+Precision
+Recall
+F1
+AUC
+Grade
+DistilBERT
+0.7533
+0.7097
+0.6984
+0.7040
+0.8468
+GOOD
+
+[Heading2] 4.5 Comparative Study and Discussion
+[Heading2] The fast path wins on every metric that matters. And it's not close — we're talking 6-8 percentage points on accuracy, 0.07 on Macro F1. That's not a tie with noise; that's a clear hierarchy.
+[Heading2] The fast path trains on 1,218 samples with 10 clean, engineered features, and the deep path trains on 1,050 text samples. That's already fewer samples, but worse, the deep models need to discover structure from raw text, while the fast models get structure handed to them. DistilBERT has 66.9M parameters. 
+[Heading2] Second, feature quality vs. feature quantity. The XGBoost feature importance dump tells a story: Extracurricular Activities (22.24%), HSC_Marks (14.78%), PlacementTraining (12.71%). These are interpretable signals that someone carefully extracted. The deep path throws all that away and asks the model to learn "what matters" from token sequences. With limited data, it learns noise.
+[Heading2] Third, the deep models overfit differently.
+[Heading2] 4.5.1 Behavior of Ensemble Models: Where Averaging Makes Sense and Where It Doesn't Make Sense
+[Heading2] Fast Path Ensemble (SVM + LR + XGBoost): This ensemble model performs well. The AUC score increases from 0.8461 (only XGBoost) to 0.8625. In this case, the ensemble model is larger than the sum of the components, because all the component models have their bias-SVM overestimates the positive class, LR is well calibrated, and XGBoost underestimates the positive class. In this case, the averaging of probabilities smoothed the curve, and it became optimal and coherent. It is the only useful ensemble model in our project.
+[Heading2] Deep Path Ensemble (DistilBERT + CNN-LSTM): These two models that were taken into account are neural networks that are designed on top of existing deep learning models. Both models also use the same text corpus, and thus are expected to make similar errors. Therefore, averaging models is likely to be not very helpful, as variance isn't reduced as much as expected.
+Fusion (Fast+Deep): Grid Search yields w_fast=0.45, w_deep=0.55, Threshold=0.55. However, the test accuracy is lower (75.33%, 0.7463 F1-Macro) compared to using only the fast model (78.67%, 0.7839 F1-Macro). The poor performance of the fusion model is due to the subpar deep model path. The minimum weight of 0.2 for the deep model prevents the algorithm from completely skipping this path.
+
+4.5.2 Constraints Not To Be Ignored
+
+[ListParagraph] Size of the sample. 1,218 samples for training are very low according to present standards for machine learning. For example, DistilBERT was pre-trained using billions of tokens. Training it on about one thousand samples would be similar to training a student in a PhD program about sums. No large amount of data is necessary for fast models, which is why they are better.
+
+[ListParagraph] CPU constraint. Due to the limitation of the CPU for training DistilBERT, the training duration was limited to 30-60 mins. Thus it was not possible to learn the learning rate, tune hyperparameters, try different batch sizes, etc. Having a GPU may improve it, but doesn't really compensate for the gap in flexibility.
+
+[ListParagraph] Quality of text data. It is not stated what the " refineddeeptrain.csv " dataset is. If texts are short, templated or redundant, there is nothing an NLP can do to make models succeed. If the text data has good quality and fast features are just an indirect representation of that text (e.g., the number of extra activities derived from the text), it seems like it is a form of cheating.
+
+[Heading1] CHAPTER 5: CONCLUSIONS 
+[Heading2] 5.1 Conclusion
+[Heading2] After implementing the entire pipeline as described (fast path, deep path, fusion, evaluation), the initial hypothesis proves wrong, even though the results are extremely clear. Traditional ML techniques would probably win this competition. Among the models used in the fast path ensemble, the best combination is: SVM + Logistic Regression + XGBoost, which produces the best values for accuracy (78.67%), Macro F1 (0.7839), and AUC (0.8625). Also, the highest accuracy of a single technique (79.33%) and the highest Macro F1 (0.7896) belong to XGBoost. DistilBERT shows rather poor results among all the models used, despite being the one with the most parameters pre-trained (66.9M); its accuracy score is 71.33%, and the Macro F1 is 0.7123. CNN-LSTM, on the other hand, produces even worse scores (accuracy is 69.33%) and appears to be overfitting because of the huge difference between training accuracy (94.6%) and test accuracy. The fusion model is rather a compromise than a step forward; with best weights (wfast=0.45, wdeep=0.55) and 0.55 threshold, the accuracy and Macro F1 of the fusion is 75.33% and 0.7463, respectively, which is rather a good score but still worse than the standalone fast ensemble. The limitation due to the participation minimum for the deep path (w_deep 0.2) does not allow the fusion to perform better than the fast path ensemble. For this particular task of student placement prediction under a small amount of labelled data, engineered tabular features, with traditional ensembles, are more effective than deep learning using raw text data because features such as extracurricular activities, HSC marks and placement trainings are valuable, while deep learning models do not recognize it from the text data.
+
+[Heading2] 5.2 Limitation
+[Heading2] Some limitations did occur while conducting this experiment, as several constraints affected the findings:
+[Heading2] A relatively small number of samples were used. The training samples in fast-path and deep-path models are 1,218 and 1,050, respectively. We are sure there's no justification to use a deep learning model when having only such a small number of samples, as deep learning performs well on a massive amount of data (with millions or even billions of data points), and DistilBERT is originally trained with billions of tokens.
+[ListParagraph] Training solely done using the CPU. The GPU could not be used to train the DistilBERT model beyond 4 epochs using a batch size of 16. The use of a GPU would have enabled us to play around with the parameters and design to increase the flexibility of our deep learning models. The shortage of time since each run took between 30 and 60 minutes led to the poor performance of our deep learning models.
+
+[ListParagraph] Lack of a proper validation dataset to select optimal fusion parameters. The validation dataset being 150 in size, the selection of the threshold and weight values was not properly done. Grid Search set threshold value to 0.55 using Macro F1 Score of validation dataset (0.8300), however, the test showed that the value should be 0.45 as compared to a Macro F1 Score of 0.7654 vs. 0.7463.
+
+[ListParagraph] Feature ablation and text data quality checks have not been done. Which of the 10 fast features contribute to the accuracy of the result is unknown; also, whether refined text data is diverse enough to justify the deep learning process is also questionable. It should be noted that if the number of extracurricular activities is extracted from the same text data DistilBERT is being fed, then it would amount to cheating.
+
+[Heading2] 5.3 Future Work
+[ListParagraph] Size of the training data- The number of data samples that are labeled are to be from 5000 to 10000. We should check whether the power of the deep learning model reflects upon training on large sized data sets. If our proposed DistilBERT model is not as effective as the fast path on 10,000 samples, it further strengthens the validity of our findings.
+
+[ListParagraph] Deployment and monitoring drift in real-time- The experiments performed here are strictly offline. Further work should deploy our proposed algorithm onto an actual placement system and track prediction drift over semesters while triggering re-training whenever a shift in the feature distribution is detected (e.g., a change in the "internship" feature's values due to remote placements of students following COVID-19).
+
+[ListParagraph] Multi-task/Transfer learning- Initial training of deep path would be using large text corpus containing student CV's / resumes and/or job description followed by fine-tuning over small placement problem. This resembles the DistilBERT model training itself - we use a large external text corpus, then fine-tune the model based on the labels of our problem. If the domain of our corpus is the same as domain of our problem (e.g., using resumes of engineering students), representation will transfer well compared to a generic DistilBERT model.
+[Heading1] REFERENCES
+[Heading1] [1] A. Durga Praveen Kumar, V. Kuchhadia, G. Charan, G. Sreeja, and N. Pavan, “Predicting Student Employability Using Machine Learning: A Comparative Study of Classification Algorithms,” in Proceedings of International Conference on Computer Science and Communication Engineering, 2025.
+[Heading1] [2] M. H. Baffa, M. A. Miyim, and A. S. Dauda, “Machine Learning for Predicting Students’ Employability,” UMYU Scientifica, vol. 2, no. 1, pp. 1–9, Mar. 2023.
+[Heading1] [3] “Enhanced Student Placement Prediction Using Machine Learning: A Comparative Evaluation of Algorithms,” International Journal of Engineering Trends and Technology, vol. 73, no. 1, pp. 225–236, Jan. 2025.
+[Heading1] [4] A. Pathak, M. Matcha, M. Gopisetti, and S. Joshi, “A Machine Learning Framework for Predicting Student Placement Outcomes.”
+[Heading1] [5] P. Thakar, A. Mehta, and Manisha, “Cluster Model for Parsimonious Selection of Variables and Enhancing Students’ Employability Prediction.”
+[Heading1] [6] R. Haque, A. Quek, C.-Y. Ting, H.-N. Goh, and M. R. Hasan, “Classification Techniques Using Machine Learning for Graduate Student Employability Predictions,” vol. 14, no. 1, 2024.
+[Heading1] [7] P. Anusha, “Machine Learning for Student Placement Forecasting: An Empirical Study with ANN and Classical Classifiers,” International Journal of Human Computer & Intelligence, 2025.
+[Heading1] [8] “Job Description Parsing with Explainable Transformer Based Ensemble Models to Extract the Technical and Non-Technical Skills,” Natural Language Processing Journal, vol. 9, p. 100102, 2024.
+[Heading1] [9] V. Jabade, A. Tibhe, A. Sharma, and P. Agarwal, “Resume Analyzer Using NLP,” International Journal of Innovative Research in Technology, vol. 12, no. 6, 2025.
+[Heading1] [10] L. Sayfullina, E. Malmi, Y. Liao, and A. Jung, “Domain Adaptation for Resume Classification Using Convolutional Neural Networks,” arXiv preprint arXiv:1707.05576, 2017.
+[Heading1] [11] N. Matkin, A. Smirnov, M. Usanin, E. Ivanov, K. Sobyanin, S. Paklina, and P. Smirnov, “Comparative Analysis of Encoder-Based NER and Large Language Models for Skill Extraction from Russian Job Vacancies.”
+[Heading1] [12] “Article,” Computers, Materials & Continua, DOI: 10.32604/cmc.2023.039334, 2023.
+[Heading1] [13] A. Moumen, I. El Bakkouri, H. Kadimi, A. Zahi, I. Sardi, M. S. Tebaa, Z. Bousserrhine, and H. Baraka, “Machine Learning for Students Employability Prediction.”
+[Heading1] [14] S. Devi and G. P. Anand, “Technical Skills Information Extraction From Resumes Using Advanced Natural Language Processing Model With Transfer Learning.”
+[Heading1] [15] K. C. Nguyen, M. Zhang, S. Montariol, and A. Bosselut, “Rethinking Skill Extraction in the Job Market Domain Using Large Language Models,” in Proceedings of the First Workshop on Natural Language Processing for Human Resources (NLP4HR 2024), 2024, pp. 27–42.
+[Heading1] [16] “Smart Application for Recruiting Based on Natural Language Processing Methods, Transformer Models and Siamese Neural Network Architecture,” I.J. Intelligent Systems and Applications, vol. 17, no. 5, pp. 95–157, 2025.
+
+[Heading1] APPENDIX A: INDIVIDUAL CONTRIBUTIONS
+The following table summarises the individual contributions of each team member to the project.
+
+Table A.1: Individual Contributions by Team Member
+Student Name
+Registration No.
+Contributions
+Sohum Chatterjee  
+2241003019
+Literature survey , Sole developer of the end-to-end training, evaluation, and inference pipeline
+Shivaji Chatterjee                   
+2241003017
+Literature survey & baseline research, Debugging training failures (CNN-LSTM overfitting, DistilBERT checkpoint issues)
+Sarfaraz Alam                         
+2241001057
+Literature survey & baseline research, Final report writing & formatting
+Md Faizan Ahmad                  
+2241001046
+Literature survey, Presentation update ,
+Final report writing & formatting
+
+All team members participated in project meetings, code reviews, and the preparation of the final research project presentation and report. The division of contributions above reflects primary responsibilities; all major technical decisions were made collaboratively.
+
+[Heading1] APPENDIX B: Dataset Description and Feature Dictionary
+Table B.1: Dataset Overview
+Property
+Value
+Total samples
+1,518 (after cleaning)
+Fast path train
+1,218 samples
+Deep path train
+1,050 samples
+Validation set
+150 samples
+Test set
+300 samples
+Features (fast path)
+10 engineered numerical/categorical
+Input (deep path)
+Free-text student resumes/descriptions
+Target variable
+Binary: Placed (1) / Not Placed (0)
+
+Table B.2: Class Distribution
+Split
+Not Placed
+Placed
+Ratio
+Fast path train
+609
+609
+50:50 (resampled)
+Deep path train
+609
+441
+58:42 (natural)
+Validation
+87
+63
+58:42
+Test
+174
+126
+58:42
+
+Table B.3: Feature Dictionary (Fast Path)
+Feature Name
+Type
+Description
+Source
+SSC_Marks
+Continuous
+Secondary School Certificate marks (10th grade)
+Academic records
+HSC_Marks
+Continuous
+Higher Secondary Certificate marks (12th grade)
+Academic records
+CGPA
+Continuous
+Cumulative Grade Point Average (college)
+Academic records
+AptitudeTestScore
+Continuous
+Standardized aptitude test result
+Placement cell
+SoftSkillsRating
+Ordinal
+Rated soft skills assessment (1-10 scale)
+Placement cell
+ExtracurricularActivities
+Count
+Number of extracurricular activities
+Student profile
+Internships
+Count
+Number of completed internships
+Student profile
+Projects
+Count
+Number of academic/personal projects
+Student profile
+Workshops_Certifications
+Count
+Completed workshops and certifications
+Student profile
+
+APPENDIX C: Complete Training Logs
+
+C.1:Fast Path Training Log
+
+C.2:Fusion Grid Search Log
+
+APPENDIX D: Complete Evaluation Metrics
+D.1 Per-Model Test Performance
+D.2 Confusion Matrix Values:
+Table D.2.1:  SVM:
+
+Pred Not Placed
+Pred Placed
+True Not Placed
+131 (75.3%)
+43 (24.7%)
+True Placed
+49 (38.9%)
+77 (61.1%)
+
+Table D.2.2:  Fast Path Ensemble:
+
+Pred Not Placed
+Pred Placed
+True Not Placed
+135 (77.6%)
+39 (22.4%)
+True Placed
+25 (19.8%)
+101 (80.2%)
+
+Table D.2.3:  DistilBERT:
+
+Pred Not Placed
+Pred Placed
+True Not Placed
+116 (66.7%)
+58 (33.3%)
+True Placed
+28 (22.2%)
+98 (77.8%)
+
+Table D.2.4:  CNN-LSTM:
+
+Pred Not Placed
+Pred Placed
+True Not Placed
+131 (75.3%)
+43 (24.7%)
+True Placed
+49 (38.9%)
+77 (61.1%)
+
+Table D.2.5:  Deep Path Ensemble:
+
+Pred Not Placed
+Pred Placed
+True Not Placed
+126 (72.4%)
+48 (27.6%)
+True Placed
+34 (27.0%)
+92 (73.0%)
+
+Table D.2.6:  Deep Path Ensemble:
+
+Pred Not Placed
+Pred Placed
+True Not Placed
+138 (79.3%)
+36 (20.7%)
+True Placed
+38 (30.2%)
+88 (69.8%)
+
+APPENDIX G: Mathematical Formulations
+G.1 Fusion Weighted Probability
+Given fast path probability Pf​ and deep path probability Pd​ , the fused probability is:
+Pfusion​=wfast​⋅Pf​+wdeep​⋅Pd​ 
+With optimized weights: wfast​=0.45 , wdeep​=0.55 
+G.2 Classification Decision
+y^​={1 (Placed)0 (Not Placed)​if Pfusion​≥thresholdotherwise​ 
+With optimized threshold: threshold=0.55 
+G.3 Evaluation Metrics
+Accuracy=TP+TN+FP+FNTP+TN​ 
+Precision=TP+FPTP​ 
+Recall=TP+FNTP​ 
+F1=2⋅Precision+RecallPrecision⋅Recall​ 
+Macro-F1=2F1class=0​+F1class=1​​ 
+AUC-ROC=∫01​TPR(t)d(FPR(t)) 
+Where TPR = True Positive Rate, FPR = False Positive Rate, integrated over all thresholds.
+
+APPENDIX F: Ethical Considerations and Data Privacy
+[ListParagraph] Source of data: It is believed that the data has been collected by the institution for research.
+[ListParagraph] Anonymous: Personal information (name, roll no., and personal details) has been anonymised from the data. All the features are based on academic and demographic parameters.
+[ListParagraph]  Bias concerns: As the feature importances suggest that extracurricular activity features are of high importance, the features related to extracurricular activity can also be representative of the socio-economic background of the individual; the model needs to be monitored for possible disparate impact on income groups.
+[ListParagraph] Fair use: Predictions to be used only for counselling and early intervention activities

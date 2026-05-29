@@ -95,6 +95,8 @@ interface EVStore {
   setLeftSidebarOpen: (v: boolean) => void;
   rightSidebarOpen: boolean;
   setRightSidebarOpen: (v: boolean) => void;
+  isMapEnlarged: boolean;
+  setIsMapEnlarged: (v: boolean) => void;
 }
 
 export const useEVStore = create<EVStore>((set, get) => ({
@@ -298,4 +300,6 @@ export const useEVStore = create<EVStore>((set, get) => ({
   setLeftSidebarOpen: (v) => set({ leftSidebarOpen: v }),
   rightSidebarOpen: false,
   setRightSidebarOpen: (v) => set({ rightSidebarOpen: v }),
+  isMapEnlarged: false,
+  setIsMapEnlarged: (v) => set({ isMapEnlarged: v }),
 }));

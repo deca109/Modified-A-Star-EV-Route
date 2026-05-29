@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import { useEVStore } from '@/state/store';
 import { CLUSTER_COLORS } from '../dashboard/Sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { ZoomIn, ZoomOut, Maximize2, Minimize2, Compass } from 'lucide-react';
 
 const ROUTE_COLORS: Record<string, string> = {
   shortest: '#38bdf8',
@@ -29,6 +29,8 @@ export default function EVMap() {
     sourceNode,
     targetNode,
     setActiveAlgorithm,
+    isMapEnlarged,
+    setIsMapEnlarged,
   } = useEVStore();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -167,7 +169,10 @@ export default function EVMap() {
 
   useEffect(() => {
     fitView();
-  }, [activeAlgorithm, routes, graphData]);
+    // Re-trigger fitView after standard page layout transitions settle (300-350ms)
+    const timer = setTimeout(fitView, 350);
+    return () => clearTimeout(timer);
+  }, [activeAlgorithm, routes, graphData, isMapEnlarged]);
 
   // ── Interactive Drag & Zoom Handlers ─────────────────────────────────────────
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -604,7 +609,14 @@ export default function EVMap() {
           className="w-8 h-8 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-500/30 flex items-center justify-center transition-all shadow-md active:scale-95"
           title="Reset Fit View"
         >
-          <Maximize2 size={15} />
+          <Compass size={15} />
+        </button>
+        <button
+          onClick={() => setIsMapEnlarged(!isMapEnlarged)}
+          className="w-8 h-8 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-500/30 flex items-center justify-center transition-all shadow-md active:scale-95"
+          title={isMapEnlarged ? "Exit Fullscreen" : "Enlarge Map"}
+        >
+          {isMapEnlarged ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
         </button>
       </div>
 

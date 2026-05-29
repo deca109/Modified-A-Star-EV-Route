@@ -1,0 +1,283 @@
+Department of Computer Science and Engineering
+Final Year Research Project Report Guidelines and Template
+After completion of the project work, every group of students will submit one group wise project report and one individual copy, which should contain the following:
+[ListParagraph] Cover Page/ Title Page
+[ListParagraph] Certificate by the Guide
+[ListParagraph] Acknowledgment (The candidate may thank all those who helped in the execution of the project.) 
+[ListParagraph] Declaration of students
+[ListParagraph] Report Approval 
+[ListParagraph] Preface (Abstract) (It should be in one page and include the purpose of the study; the methodology used and a summary of the major findings.)
+[ListParagraph] Table of Contents 
+[ListParagraph] Detailed description of the project (This should be split in various chapters/sections with each chapter/section describing a project activity in totality). This portion of report should contain all relevant diagrams, tables, flow charts, software programme, print outs, photographs etc., which are properly labeled.
+[ListParagraph] Conclusion
+[ListParagraph] Appendices
+[ListParagraph] Appendices are provided to give supplementary information, which if included in the main text may serve as a distraction and cloud the central theme.                                    
+[ListParagraph] Appendices should be numbered using Arabic numerals, e.g. Appendix 1, Appendix 2.
+[ListParagraph] Appendices shall carry the title of the work reported and the same title shall be listed in the Contents page also.
+[ListParagraph] Similarity report of the project report below 16% duly measured using ‘Turnitin’ similarity measure software (available at central library).
+
+[ListParagraph] References (The listing of references should be typed 2 spaces below the heading “REFERENCES” in alphabetical order in single spacing left – justified.  It should be numbered consecutively (in square [ ] brackets, throughout the text and should be collected together in the reference list at the end of the report. The references should be numbered in the order they are used in the text. The name of the author/authors should be immediately followed by the year and other details).  Typical examples of the references are given below: 
+[1]Ariponnammal, S. and Natarajan, S. (1994) ‘Transport Phonomena of SmSel – X Asx’, Pramana – Journal of Physics Vol.42, No.1, pp.421-425. 
+
+[ListParagraph] 11.Reflection of the team members on the project 
+[ListParagraph] Write what you learned as a team.
+[ListParagraph]  Write what you learned as a member.
+[ListParagraph]  Write a thoughtful paragraph on strengths and weaknesses of your design process.
+[ListParagraph]  In addition, following points should be complied with:
+[ListParagraph] Page numbering
+[ListParagraph] Numbering of appendices, figures and tables and their reference in the text.
+[ListParagraph] For general layout of report, any standard text book layout may be referred.
+Report Specifications
+[ListParagraph] Project Report’s Cover Type:  Hard-bound
+[ListParagraph] Color of Project Report Cover:  Navy Blue only with white alphabets (as per Annexure 1)
+[ListParagraph] Number of Copies: 2 per group (Internal/External exam + Individual or Student’s copy)
+[ListParagraph] Paper Size (orientation): A4 (portrait)
+[ListParagraph] Margins: 1” top / bottom / right and 1.5” left
+[ListParagraph] Font Type: Times New Roman
+[ListParagraph] Font Size: 16 bold for chapter names, 14 bold for headings and 12 for normal text
+[ListParagraph] Line Spacing: 1.5 throughout
+[ListParagraph] Page Numbering:  Bottom center of page in the format – Page 1 of N
+NOTE: Project report must not contain any description of the following except only a relevant and short mention – technology or platform or OS or tools used or any language details.  It must be more focused on project work carried out and its implementation details without including any source code.
+Details of CD
+CD of the project work is required to be pasted on the back cover of the project report in clear packet, which should include the following folders and contents:
+[ListParagraph] Presentation (should include a PPT about project in not more than 20-30 slides)
+[ListParagraph] Documentation (should include a word file of the project report)
+[ListParagraph] Source Code (full source code of the project with libraries used)
+[ListParagraph] Program (final running copy of the project executable)
+[ListParagraph] Support (any third party tools used or runtime environment setups that are required to run the project)
+[ListParagraph] Help (user manual on how to run the project)
+NOTE: CD must be checked for any harmful viruses before submission. Source Code and Program folders may be combined into single folder Project if it’s a web project etc.
+
+TITLE OF PROJECT
+<Font Size 22><BOLD><Centralized>
+A Project Report
+<Font Size 14>><BOLD><Centralized>
+Submitted by:
+<Font Size 12><Italic>><BOLD><Centralized>
+NAME OF THE STUDENT(S) (<University Registration Number>)
+<Font Size 16>><BOLD><Centralized>
+in partial fulfillment for the award of the degree
+of
+<Font Size 14><1.5 line spacing><Italic><BOLD><Centralized>
+BACHELOR OF TECHONOLOGY
+<Font Size 16>><BOLD><Centralized>
+IN
+COMPUTER SCIENCE AND ENGINEERING
+
+DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
+Faculty of Engineering and Technology, Institute of Technical Education and Research
+SIKSHA ‘O’ ANUSANDHAN (DEEMED TO BE) UNIVERSITY
+Bhubaneswar, Odisha, India
+(June 2026)
+
+CERTIFICATE
+
+This is to certify that the project report titled “——————————————–” being submitted by (Name of students and Section) to the Institute of Technical Education and Research, Siksha ‘O’ Anusandhan (Deemed to be) University, Bhubaneswar for the partial fulfillment for the degree of Bachelor of Technology in Computer Science and Engineering is a record of original confide work carried out by them under my/our supervision and guidance. The project work, in my/our opinion, has reached the requisite standard fulfilling the requirements for the degree of Bachelor of Technology.
+The results contained in this project work have not been submitted in part or full to any other University or Institute for the award of any degree or diploma.
+
+(Name and signature of the Project Supervisor) 
+Department of Computer Science and Engineering
+Faculty of Engineering and Technology;
+Institute of Technical Education and Research; 
+Siksha ‘O’ Anusandhan (Deemed to be) University
+
+ACKNOWLEDGEMENT
+
+(In this page, express your gratitude to anybody or any Institute for using its facility in making your project happen.)
+
+Place: Signature of Students
+
+Date: 
+
+DECLARATION
+
+We declare that this written submission represents our ideas in our own words and where other’s ideas or words have been included, we have adequately cited and referenced the original sources. We also declare that we have adhered to all principles of academic honesty and integrity and have not misrepresented or fabricated or falsified any idea/fact/source in our submission. We understand that any violation of the above will cause for disciplinary action by the University and can also evoke penal action from the sources which have not been properly cited or from whom proper permission has not been taken when needed.
+
+Signature of Students with Registration Numbers
+Date: ————–
+
+REPORT APPROVAL
+
+This project report titled “---------------------------------------------“ submitted by --------------------------------------------------------------------------- is approved for the degree of Bachelor of Technology in Computer Science and Engineering.
+
+Examiner(s)
+
+________________________
+________________________
+________________________
+
+Supervisor
+
+________________________
+
+Project Coordinator
+
+________________________
+
+PREFACE
+
+(In this page, the project abstract without keywords needs to be written)
+
+INDIVIDUAL CONTRIBUTIONS
+
+Student Name
+Literature survey; problem formulation and solution design; experimentation; documentation
+Student Name
+Literature survey; identification of problem statement; documentation
+Student Name
+Literature survey; experimentation; result analysis and design; documentation
+Student Name
+Literature survey; result validation; documentation
+
+* In the Specimen Table of Content (given below), other mentioned items remaining the same,  the sub-headers specified within the chapter heading (highlighted) can be changed judiciously with respect to the specific project work undertaken.
+TABLE OF CONTENTS
+
+Title Page
+i
+
+Certificate
+ii
+
+Acknowledgement
+iii
+
+Declaration
+iv
+
+Report Approval
+v
+
+Preface
+vi
+
+Individual Contributions
+vii
+
+Table of Contents
+viii
+
+List of Figures
+ix
+
+List of Tables (optional)
+x
+
+1.
+INTRODUCTION
+1
+
+[ListParagraph] Project Overview
+[ListParagraph] Motivations
+[ListParagraph] Uniqueness of the Work
+[ListParagraph] Report Layout
+1
+3
+4
+6
+
+2.
+LITERATURE SURVEY
+
+2.1 Review of Existing Systems / Related Work
+2.2 Research Gaps Identified
+2.3 Problem Identification
+
+3.
+MATERIALS AND METHODS
+
+3.1 Dataset(s) Description
+3.2 Schematic Layout/Model Diagram
+3.3 Methodologies Adopted
+3.4 Tools Used
+3.5 Experimental Setup
+3.5 Evaluation Metrics and Performance Measures
+
+4.
+RESULTS 
+4.1 System Specification
+4.2 Parameters and Configuration Settings
+4.3 Experimental Results and Observations
+4.4 Performance Analysis
+4.5 Comparative Study and Discussion
+
+5.
+CONCLUSIONS 
+47
+6.
+REFERENCES
+49
+7.
+APPENDICES
+50
+8.
+REFLECTION OF THE TEAM MEMBERS ON THE PROJECT
+51
+9.
+SIMILARITY REPORT
+52
+
+LIST OF FIGURES
+
+NO
+FIGURE NAME
+PAGE NO
+1
+Impact of Social Distancing
+4
+2
+Model Diagram
+8
+3
+
+9
+4
+
+9
+5
+
+10
+6
+
+11
+7
+
+12
+8
+
+15
+9
+
+15
+
+LIST OF TABLES
+
+NO
+TABLE NAME
+PAGE NO
+1
+Loss and Accuracy
+5
+2
+Accuracy of Previously Executed Models
+8
+3
+Accuracy of Our Trained Model
+9
+4
+
+12
+5
+
+15
+6
+
+15
+7
+
+16
+8
+
+20
+9
+
+25
